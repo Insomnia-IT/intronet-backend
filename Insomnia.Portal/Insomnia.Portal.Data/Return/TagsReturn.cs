@@ -1,0 +1,21 @@
+﻿using Insomnia.Portal.Data.Dto;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Insomnia.Portal.Data.Return
+{
+    public class TagsReturn : BaseReturn
+    {
+        public TagsReturn() { }
+
+        public TagsReturn(IList<TagDto> model)
+        {
+            Model = model;
+        }
+
+        public new IList<TagDto> Model { get; set; }
+    }
+}
