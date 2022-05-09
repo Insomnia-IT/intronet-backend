@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Insomnia.Portal.Data.Generic;
 
 namespace Insomnia.Portal.Data.ViewModels.Input
 {
@@ -12,6 +13,6 @@ namespace Insomnia.Portal.Data.ViewModels.Input
 
         public string Text { get; set; }
 
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; } = StaticValues.DefaultIdNoteCategories;
     }
 }

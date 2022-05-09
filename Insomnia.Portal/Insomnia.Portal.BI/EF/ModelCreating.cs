@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Insomnia.Portal.Data.Generic;
 
 namespace Insomnia.Portal.EF
 {
@@ -15,7 +16,13 @@ namespace Insomnia.Portal.EF
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var defaultCategory = new NoteCategory()
+            {
+                Id = StaticValues.DefaultIdNoteCategories,
+                Name = StaticValues.DefaultNameNoteCategories,
+            };
 
+            modelBuilder.Entity<NoteCategory>().HasData(defaultCategory);
         }
     }
 }

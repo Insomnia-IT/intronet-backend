@@ -12,7 +12,7 @@ namespace Insomnia.Portal.Data.Entity
 
         public string Text { get; set; }
 
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         public NoteCategory Category { get; set; }
     }

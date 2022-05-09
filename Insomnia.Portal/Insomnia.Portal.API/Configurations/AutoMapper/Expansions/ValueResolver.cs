@@ -13,6 +13,7 @@ using Insomnia.Portal.Data.Entity;
 using Insomnia.Portal.Data.Dto;
 using Insomnia.Portal.BI.Interfaces;
 using Insomnia.Portal.Data.ViewModels.Input;
+using Insomnia.Portal.Data.Generic;
 
 namespace Insomnia.Portal.API.Configurations.AutoMapper
 {
@@ -67,10 +68,10 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
 
         public NoteCategory Resolve(CreateNote source, Note note, NoteCategory result, ResolutionContext context)
         {
-            if (!source.CategoryId.HasValue)
-                return null;
+            if (source.CategoryId <= 0)
+                source.CategoryId = StaticValues.DefaultIdNoteCategories;
 
-            var category = _categories.GetEntityOrCreating(source.CategoryId.Value);
+            var category = _categories.GetEntityOrCreating(source.CategoryId);
 
             return category;
         }
@@ -87,10 +88,10 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
 
         public NoteCategory Resolve(EditNote source, Note note, NoteCategory result, ResolutionContext context)
         {
-            if (!source.CategoryId.HasValue)
-                return null;
+            if (source.CategoryId <= 0)
+                source.CategoryId = StaticValues.DefaultIdNoteCategories;
 
-            var category = _categories.GetEntityOrCreating(source.CategoryId.Value);
+            var category = _categories.GetEntityOrCreating(source.CategoryId);
 
             return category;
         }

@@ -27,13 +27,13 @@ namespace Insomnia.Portal.General.Expansions
             {
                 if (filter.IsSmartFilter)
                 {
-                    return (await notes.Where(x => x.CategoryId.HasValue && filter.CategoriesIds.Contains(x.CategoryId.Value)).ToListAsync())
+                    return (await notes.Where(x => filter.CategoriesIds.Contains(x.CategoryId)).ToListAsync())
                             .GroupBy(x => x.CategoryId)
                             .SelectMany(x => x.BaseFilter(filter)).ToList();
                 }
                 else
                 {
-                    notes = notes.Where(x => x.CategoryId.HasValue && filter.CategoriesIds.Contains(x.CategoryId.Value));
+                    notes = notes.Where(x => filter.CategoriesIds.Contains(x.CategoryId));
                 }
             }
             else

@@ -54,7 +54,7 @@ namespace Insomnia.Portal.API.Controllers
             return Result(category);
         }
 
-        [HttpGet("all/filter")]
+        [HttpGet("filter")]
         public async Task<IActionResult> GetAllWithFilter([FromQuery] NotesFilter filter)
         {
             var notes = await _board.GetAllWithFilter(filter);
