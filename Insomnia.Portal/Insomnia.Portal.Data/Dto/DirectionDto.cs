@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Insomnia.Portal.Data.Entity
+namespace Insomnia.Portal.Data.Dto
 {
-    public class Direction : Base
+    public class DirectionDto
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string Image { get; set; }
-
-        public ICollection<Location> Locations { get; set; }
     }
 }

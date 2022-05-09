@@ -15,7 +15,11 @@ namespace Insomnia.Portal.Data.ViewModels.Input
 
         public double Y { get; set; }
 
-        public int MainTagId { get; set; }
+        public double Lat { get; set; }
+
+        public double Lon { get; set; }
+
+        public int DirectionId { get; set; }
 
         public int[] Tags { get; set; }
     }

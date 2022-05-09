@@ -16,10 +16,12 @@ namespace Insomnia.Portal.EF
         public DbSet<Note> Notes { get; set; }
         public DbSet<Timetable> Timetables { get; set; }
         public DbSet<NoteCategory> NoteCategories { get; set; }
+        public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<Direction> Directions { get; set; }
 
         public ServiceDbContext(DbContextOptions<ServiceDbContext> option) : base(option)
         {
-            //Database.EnsureDeleted();
+           // Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
@@ -62,6 +64,16 @@ namespace Insomnia.Portal.EF
                             break;
                     }
                 }
+                if (entry.Entity is Attachment attach)
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            attach.Guid = Guid.NewGuid();
+                            break;
+                    }
+                }
+
             }
         }
 

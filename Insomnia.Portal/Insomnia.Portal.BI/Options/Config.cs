@@ -8,6 +8,6 @@ namespace Insomnia.Portal.BI.Options
 {
     public class Config
     {
-
+        public AttachmentOptions AttachmentsConfig { get; set; }
     }
 }

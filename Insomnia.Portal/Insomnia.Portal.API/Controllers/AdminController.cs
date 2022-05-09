@@ -25,9 +25,10 @@ namespace Insomnia.Portal.API.Controllers
         private readonly IAdminNotesboard _notesboard;
         private readonly IAdminSchedule _schedule;
         private readonly IAdminNotesCategories _notescategories;
+        private readonly IAdminDirection _direction;
 
         public AdminController(ILogger<AdminController> logger, IMapper mapper,
-            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories)
+            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction)
         {
             _logger = logger;
             _mapper = mapper;
@@ -36,7 +37,10 @@ namespace Insomnia.Portal.API.Controllers
             _notesboard = notesboard;
             _schedule = schedule;
             _notescategories = notescategories;
+            _direction = direction;
         }
+
+        #region Locations
 
         [HttpPost("locations/add")]
         public async Task<IActionResult> AddLocation([FromBody] CreateLocation model)
@@ -90,6 +94,10 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        #endregion
+
+        #region Location tags
+
         [HttpPost("tags/add")]
         public async Task<IActionResult> AddTag([FromBody] CreateTag model)
         {
@@ -140,6 +148,65 @@ namespace Insomnia.Portal.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        #endregion
+
+        #region Location directions
+
+        [HttpPost("directions/add")]
+        public async Task<IActionResult> AddDirection([FromForm] CreateDirection model)
+        {
+            try
+            {
+                var result = await _direction.Add(model);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("directions/edit")]
+        public async Task<IActionResult> EditDirection([FromForm] EditDirection model)
+        {
+            if (model == null)
+                return BadRequest("Пустая модель запроса!");
+
+            if (model.Id <= 0)
+                return NotFound("Направления с ID = 0 не существует!");
+
+            try
+            {
+                var result = await _direction.Edit(model);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("directions/delete/{id}")]
+        public async Task<IActionResult> DeleteDirection(int id)
+        {
+            try
+            {
+                var result = await _direction.Delete(id);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Notes
 
         [HttpPost("notes/add")]
         public async Task<IActionResult> AddNote([FromBody] CreateNote model)
@@ -192,6 +259,10 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        #endregion
+
+        #region Notes categories
+
         [HttpPost("notes/categories/add")]
         public async Task<IActionResult> AddNoteCategory([FromBody] CreateNoteCategory model)
         {
@@ -242,5 +313,7 @@ namespace Insomnia.Portal.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        #endregion
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Insomnia.Portal.Data.Return;
 using Insomnia.Portal.Data.Enums;
+using System.IO;
 
 namespace Insomnia.Portal.API.Controllers.Base
 {
@@ -44,6 +45,16 @@ namespace Insomnia.Portal.API.Controllers.Base
                 return GetError(model.Code, model.Message);
 
             return Ok(model.Model);
+        }
+
+        internal IActionResult File(BaseReturn attachment)
+        {
+            if (!attachment.Success)
+                return GetError(attachment.Code, attachment.Message);
+
+            var model = (attachment.Model as Data.Dto.AttachmentDto);
+
+            return base.File((model.Stream as MemoryStream).ToArray(), "application/octet-stream", model.FileName);
         }
 
         private IActionResult GetError(CodeRequest code, string errorMessage) =>

@@ -16,7 +16,11 @@ namespace Insomnia.Portal.Data.Entity
 
         public double Y { get; set; }
 
-        public int MainTagId { get; set; }
+        public double Lat { get; set; }
+
+        public double Lon { get; set; }
+
+        public int DirectionId { get; set; }
 
         public Direction Direction { get; set; }
 

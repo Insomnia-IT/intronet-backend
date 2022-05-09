@@ -23,7 +23,7 @@ namespace Insomnia.Portal.API.Configurations.Autofac
                 .As<ISchedule>()
                 .As<IAdminSchedule>();
 
-            builder.RegisterType<Tag>()
+            builder.RegisterType<LocationTag>()
                 .As<ITag>()
                 .As<IEntityTag>()
                 .As<IAdminTag>();
@@ -37,14 +37,21 @@ namespace Insomnia.Portal.API.Configurations.Autofac
                 .As<IEntityNotesCategories>()
                 .As<IAdminNotesCategories>();
 
+            builder.RegisterType<LocationDirection>()
+                .As<IDirection>()
+                .As<IEntityDirection>()
+                .As<IAdminDirection>();
 
-            builder.RegisterType<FormatterTagToCreateLocation>();
+            builder.RegisterType<AttachmentService>()
+                .As<IAttachment>();
 
-            builder.RegisterType<FormatterTagToEditLocation>();
+            builder.RegisterType<FormatterTagToCreateOrEditLocation>();
 
-            builder.RegisterType<FormatterCategoryToCreateNote>();
+            builder.RegisterType<FormatterCategoryToCreateOrEditNote>();
 
-            builder.RegisterType<FormatterCategoryToEditNote>();
+            builder.RegisterType<FormatterDirectionToCreateOrEditDirection>();
+
+            builder.RegisterType<FormatterDirectionToCreateOrEditLocation>();
 
             builder.Register(context => new MapperConfiguration(cfg =>
             {

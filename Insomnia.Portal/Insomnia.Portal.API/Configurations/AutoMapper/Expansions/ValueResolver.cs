@@ -17,11 +17,11 @@ using Insomnia.Portal.Data.Generic;
 
 namespace Insomnia.Portal.API.Configurations.AutoMapper
 {
-    public class FormatterTagToCreateLocation : IValueResolver<CreateLocation, Location, ICollection<Tag>>
+    public class FormatterTagToCreateOrEditLocation : IValueResolver<CreateLocation, Location, ICollection<Tag>>
     {
         private readonly IEntityTag _tag;
 
-        public FormatterTagToCreateLocation(IEntityTag tag)
+        public FormatterTagToCreateOrEditLocation(IEntityTag tag)
         {
             _tag = tag;
         }
@@ -37,31 +37,11 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
         }
     }
 
-    public class FormatterTagToEditLocation : IValueResolver<EditLocation, Location, ICollection<Tag>>
-    {
-        private readonly IEntityTag _tag;
-
-        public FormatterTagToEditLocation(IEntityTag tag)
-        {
-            _tag = tag;
-        }
-
-        public ICollection<Tag> Resolve(EditLocation source, Location location, ICollection<Tag> result, ResolutionContext context)
-        {
-            if (source.Tags.IsEmptyOrNull())
-                return new List<Tag>();
-
-            var tags = _tag.GetEntitiesOrCreating(source.Tags);
-
-            return tags;
-        }
-    }
-
-    public class FormatterCategoryToCreateNote : IValueResolver<CreateNote, Note, NoteCategory>
+    public class FormatterCategoryToCreateOrEditNote : IValueResolver<CreateNote, Note, NoteCategory>
     {
         private readonly IEntityNotesCategories _categories;
 
-        public FormatterCategoryToCreateNote(IEntityNotesCategories categories)
+        public FormatterCategoryToCreateOrEditNote(IEntityNotesCategories categories)
         {
             _categories = categories;
         }
@@ -77,23 +57,44 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
         }
     }
 
-    public class FormatterCategoryToEditNote : IValueResolver<EditNote, Note, NoteCategory>
+    public class FormatterDirectionToCreateOrEditLocation : IValueResolver<CreateLocation, Location, Direction>
     {
-        private readonly IEntityNotesCategories _categories;
+        private readonly IEntityDirection _direction;
 
-        public FormatterCategoryToEditNote(IEntityNotesCategories categories)
+        public FormatterDirectionToCreateOrEditLocation(IEntityDirection direction)
         {
-            _categories = categories;
+            _direction = direction;
         }
 
-        public NoteCategory Resolve(EditNote source, Note note, NoteCategory result, ResolutionContext context)
+        public Direction Resolve(CreateLocation source, Location location, Direction result, ResolutionContext context)
         {
-            if (source.CategoryId <= 0)
-                source.CategoryId = StaticValues.DefaultIdNoteCategories;
+            var direction = _direction.GetEntityOrCreating(source.DirectionId);
 
-            var category = _categories.GetEntityOrCreating(source.CategoryId);
+            return direction;
+        }
+    }
 
-            return category;
+    public class FormatterDirectionToCreateOrEditDirection : IValueResolver<CreateDirection, Direction, string>
+    {
+        private readonly IAttachment _attachment;
+
+        public FormatterDirectionToCreateOrEditDirection(IAttachment attachment)
+        {
+            _attachment = attachment;
+        }
+
+        public string Resolve(CreateDirection source, Direction destination, string result, ResolutionContext context)
+        {
+            if(!String.IsNullOrEmpty(source.Image) && source.Image.IsUrl())
+                return source.Image;
+
+            if (source.File is not null && source.File.IsImage())
+                return Task.Run(async () => await _attachment.Upload(new CreateAttachment()
+                {
+                    File = source.File,
+                })).Result;
+
+            return StaticValues.DefaultImageForLocationDirection;
         }
     }
 }

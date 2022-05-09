@@ -47,5 +47,24 @@ namespace Insomnia.Portal.General.Expansions
             elements.All(x => x.CanParseToFloat());
 
         public static string[] ToArray(this string elements) => elements.Split(',');
+
+        public static bool IsUrl(this string url) => Uri.TryCreate(url, UriKind.Absolute, out Uri uriResult)
+                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+        public static string FixUrl(this string url)
+        {
+            if (!url.StartsWith("http://") && !url.StartsWith("https://"))
+            {
+                var port = url.Split(':', '/')[1];
+                if (!String.IsNullOrEmpty(port))
+                {
+                    if (port == "8443" || port == "443")
+                        url = "https://" + url;
+                    else
+                        url = "http://" + url;
+                }
+            }
+            return url.EndsWith('/') ? url : url + '/';
+        }
     }
 }

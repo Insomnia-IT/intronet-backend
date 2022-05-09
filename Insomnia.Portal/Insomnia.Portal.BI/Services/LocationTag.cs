@@ -13,36 +13,37 @@ using Insomnia.Portal.Data.Filters;
 using Insomnia.Portal.General.Expansions;
 using Insomnia.Portal.Data.Enums;
 using Insomnia.Portal.Data.ViewModels.Input;
+using Insomnia.Portal.Data.Entity;
 
 namespace Insomnia.Portal.BI.Services
 {
-    public class Tag : Base<Data.Entity.Tag, TagDto>, ITag, IEntityTag, IAdminTag
+    public class LocationTag : Base<Tag, TagDto>, ITag, IEntityTag, IAdminTag
     {
-        public Tag(ServiceDbContext context, IMapper mapper) : base(mapper, context)
+        public LocationTag(ServiceDbContext context, IMapper mapper) : base(mapper, context)
         {
         }
 
-        public IList<Data.Entity.Tag> GetEntities(int[] tags)
+        public IList<Tag> GetEntities(int[] tags)
         {
             return Tags.Where(x => tags.Contains(x.Id)).ToListOrNull();
         }
 
-        public Data.Entity.Tag GetEntity(int tag)
+        public Tag GetEntity(int tag)
         {
             return Tags.SingleOrDefault(x => x.Id == tag);
         }
 
-        private Data.Entity.Tag GetLastEntity()
+        private Tag GetLastEntity()
         {
             return Tags.OrderByDescending(x => x.Id).FirstOrDefault();
         }
 
-        private IList<Data.Entity.Tag> GetLastEntities(int count)
+        private IList<Tag> GetLastEntities(int count)
         {
             return Tags.OrderByDescending(x => x.Id).Take(count).ToListOrNull();
         }
 
-        public Data.Entity.Tag Create(int tag)
+        public Tag Create(int tag)
         {
             var entity = GetTagEntityModel(tag);
 
@@ -52,7 +53,7 @@ namespace Insomnia.Portal.BI.Services
             return GetLastEntity();
         }
 
-        public IList<Data.Entity.Tag> Create(int[] tags)
+        public IList<Tag> Create(int[] tags)
         {
             var entities = GetEntities(tags);
             var newTags = entities is null ? tags : tags.Except(entities.Select(x => x.Id).ToArray());
@@ -88,12 +89,12 @@ namespace Insomnia.Portal.BI.Services
             return Ok(tags);
         }
 
-        public Data.Entity.Tag GetEntityOrCreating(int tag)
+        public Tag GetEntityOrCreating(int tag)
         {
             return GetEntity(tag) ?? Create(tag);
         }
 
-        public IList<Data.Entity.Tag> GetEntitiesOrCreating(int[] tags)
+        public IList<Tag> GetEntitiesOrCreating(int[] tags)
         {
             var entities = GetEntities(tags);
 
@@ -103,7 +104,7 @@ namespace Insomnia.Portal.BI.Services
             return entities;
         }
 
-        private Data.Entity.Tag GetTagEntityModel(int tag) => new Data.Entity.Tag()
+        private Tag GetTagEntityModel(int tag) => new Tag()
         {
             Name = tag.ToString(),
         };
@@ -170,11 +171,11 @@ namespace Insomnia.Portal.BI.Services
             }
         }
 
-        private TagReturn Ok(Data.Entity.Tag tag) => Ok(tag.ToDto<TagDto>(_mapper).ToReturn<TagReturn>());
+        private TagReturn Ok(Tag tag) => Ok(tag.ToDto<TagDto>(_mapper).ToReturn<TagReturn>());
 
         private TagReturn Error(string errorMessage) => base.Error<TagReturn>(errorMessage);
 
-        private TagsReturn Ok(IList<Data.Entity.Tag> tag) => Ok(tag.ToDto<IList<TagDto>>(_mapper).ToReturn<TagsReturn>());
+        private TagsReturn Ok(IList<Tag> tag) => Ok(tag.ToDto<IList<TagDto>>(_mapper).ToReturn<TagsReturn>());
 
         private TagsReturn Errors(string errorMessage) => base.Error<TagsReturn>(errorMessage);
 
@@ -182,6 +183,6 @@ namespace Insomnia.Portal.BI.Services
 
         private TagsReturn NotFoundArray(string errorMessage) => base.Error<TagsReturn>(errorMessage, CodeRequest.NotFound);
 
-        private IQueryable<Data.Entity.Tag> Tags => _context.Tags;
+        private IQueryable<Tag> Tags => _context.Tags;
     }
 }

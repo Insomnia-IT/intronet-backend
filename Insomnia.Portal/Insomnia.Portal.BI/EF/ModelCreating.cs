@@ -23,6 +23,15 @@ namespace Insomnia.Portal.EF
             };
 
             modelBuilder.Entity<NoteCategory>().HasData(defaultCategory);
+
+            var defaultDirection = new Direction()
+            {
+                Id = StaticValues.DefaultIdForLocationDirection,
+                Name = StaticValues.DefaultNameForLocationDirection,
+                Image = StaticValues.DefaultImageForLocationDirection,
+            };
+
+            modelBuilder.Entity<Direction>().HasData(defaultDirection);
         }
     }
 }

@@ -8,8 +8,14 @@ namespace Insomnia.Portal.Data.Generic
 {
     public static class StaticValues
     {
-        public static int DefaultIdNoteCategories = 1;
+        public const int DefaultIdNoteCategories = 1;
 
-        public static string DefaultNameNoteCategories = "Все";
+        public const string DefaultNameNoteCategories = "Все";
+
+        public const int DefaultIdForLocationDirection = 1;
+
+        public const string DefaultNameForLocationDirection = "Локация";
+
+        public const string DefaultImageForLocationDirection = "https://yastatic.net/s3/front-maps-static/maps-front-maps//static/v26/icons/favicon/favicon.png";
     }
 }
