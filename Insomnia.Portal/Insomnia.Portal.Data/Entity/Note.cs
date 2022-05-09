@@ -8,9 +8,9 @@ namespace Insomnia.Portal.Data.Entity
 {
     public class Note : Base2
     {
-        public string Header { get; set; }
-
         public string Title { get; set; }
+
+        public string Text { get; set; }
 
         public int? CategoryId { get; set; }
 
