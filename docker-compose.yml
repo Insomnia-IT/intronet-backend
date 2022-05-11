@@ -1,0 +1,28 @@
+networks:
+  api:
+      name: api
+      attachable: true
+
+services:
+  pg:
+    image: 'postgres:14'
+    restart: always
+    ports:
+      - '5432:5432'
+    networks:
+      - api
+    volumes:
+      - ./db:/db
+    environment:
+      POSTGRES_DB: 'database'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: '12345'
+      PGDATA: '/db'
+  api:
+    context: .
+    restart: always
+    ports:
+      - '8081:80'
+      - '44302:44302'
+    networks:
+      - api
