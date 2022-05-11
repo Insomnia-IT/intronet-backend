@@ -12,22 +12,22 @@ using System.Threading.Tasks;
 namespace Insomnia.Portal.API.Controllers
 {
     [ApiController]
-    [Route("api/[Controller]")]
-    public class SettingsController : BaseController
+    [Route("")]
+    public class ExampleController : BaseController
     {
-        private readonly ILogger<SettingsController> _logger;
+        private readonly ILogger<ExampleController> _logger;
         private readonly IMapper _mapper;
 
-        public SettingsController(ILogger<SettingsController> logger, IMapper mapper)
+        public ExampleController(ILogger<ExampleController> logger, IMapper mapper)
         {
             _logger = logger;
             _mapper = mapper;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post()
+        [HttpGet("alive")]
+        public async Task<IActionResult> Alive()
         {
-            return Ok();
+            return Ok("I BELIVE I CAN FLY!");
         }
     }
 }
