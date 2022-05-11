@@ -5,6 +5,7 @@
     <UserSecretsId>37d965f0-7b76-4afc-9d5b-318587918f61</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
+    <StartupObject>Insomnia.Portal.API.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

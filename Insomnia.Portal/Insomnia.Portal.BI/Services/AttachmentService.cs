@@ -34,7 +34,7 @@ namespace Insomnia.Portal.BI.Services
         {
             var entity = GetEntity(attachment);
             if (entity == null)
-                throw new Exception("Не удалось создать тэг!");
+                throw new Exception("Не удалось создать файл!");
 
             using (var file = File.Create(GetPath(entity.TempName)))
             {
