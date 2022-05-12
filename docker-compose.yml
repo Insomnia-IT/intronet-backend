@@ -1,7 +1,14 @@
+version: '3'
+
 networks:
   api:
       name: api
       attachable: true
+  host:
+    driver: bridge
+
+volumes:
+  postgres_data:
 
 services:
   pg:
@@ -12,17 +19,22 @@ services:
     networks:
       - api
     volumes:
-      - ./db:/db
+      - postgres_data:/db
     environment:
       POSTGRES_DB: 'database'
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: '12345'
       PGDATA: '/db'
-  api:
-    context: .
+  ip_api:
+    build:
+      context: .
+    depends_on:
+      - pg
     restart: always
     ports:
       - '8081:80'
-      - '44302:44302'
+    links:
+      - pg
     networks:
       - api
+      - host
