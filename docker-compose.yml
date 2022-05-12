@@ -4,6 +4,8 @@ networks:
   api:
       name: api
       attachable: true
+  apps:
+    external: true
   host:
     driver: bridge
 
@@ -38,6 +40,7 @@ services:
     networks:
       - api
       - host
+      - apps
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://127.0.0.1/alive"]
       interval: 60s
