@@ -4,6 +4,10 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runner
 WORKDIR /app
 EXPOSE 80
 
+RUN apt update && \
+    apt install -y curl
+
+
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["Insomnia.Portal/Insomnia.Portal.API/Insomnia.Portal.API.csproj", "Insomnia.Portal/Insomnia.Portal.API/"]
@@ -15,8 +19,10 @@ COPY . .
 WORKDIR "/src/Insomnia.Portal/Insomnia.Portal.API"
 RUN dotnet build "Insomnia.Portal.API.csproj" -c Release -o /app/build
 
+
 FROM build AS publish
 RUN dotnet publish "Insomnia.Portal.API.csproj" -c Release -o /app/publish
+
 
 FROM runner AS final
 WORKDIR /app
