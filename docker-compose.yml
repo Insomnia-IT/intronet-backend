@@ -32,7 +32,7 @@ services:
       - pg
     restart: always
     ports:
-      - '8081:80'
+      - '8091:80'
     links:
       - pg
     networks:

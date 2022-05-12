@@ -16,7 +16,7 @@ jobs:
     - name: stop containers
       run: docker-compose down
     - name: up compose stack
-      run: docker-compose up
+      run: docker-compose up -d
 #    - name: cleanup docker containers
 #      run: docker container prune --filter "until=24h" -f
 #    - name: cleanup docker images
