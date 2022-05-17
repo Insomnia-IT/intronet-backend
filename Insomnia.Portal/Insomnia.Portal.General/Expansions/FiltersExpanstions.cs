@@ -50,23 +50,23 @@ namespace Insomnia.Portal.General.Expansions
             return await notes.BaseFilterToListAsync(filter);
         }
 
-        private static IQueryable<T> BaseFilter<T>(this IQueryable<T> entity, BaseFilter filter)
+        private static IQueryable<T> BaseFilter<T>(this IQueryable<T> entity, BaseFilter filter) where T : Base2
         {
             entity = entity.Skip(filter.Page * filter.Count);
             entity = entity.Take(filter.Count);
 
-            return entity;
+            return entity.OrderByDescending(x => x.CreatedDate);
         }
 
-        private static IEnumerable<TElement> BaseFilter<Tkey, TElement>(this IGrouping<Tkey, TElement> entity, BaseFilter filter)
+        private static IEnumerable<TElement> BaseFilter<Tkey, TElement>(this IGrouping<Tkey, TElement> entity, BaseFilter filter) where TElement : Base2
         {
             var result = entity.Skip(filter.Page * filter.Count);
             result = result.Take(filter.Count);
 
-            return result.OrderByDescending;
+            return result.OrderByDescending(x => x.CreatedDate);
         }
 
-        private static async Task<IList<T>> BaseFilterToListAsync<T>(this IQueryable<T> entity, BaseFilter filter)
+        private static async Task<IList<T>> BaseFilterToListAsync<T>(this IQueryable<T> entity, BaseFilter filter) where T : Base2
         {
             return await entity.BaseFilter(filter).ToListAsync();
         }

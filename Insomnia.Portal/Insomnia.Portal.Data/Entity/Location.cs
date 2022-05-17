@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Insomnia.Portal.Data.Entity
 {
-    public class Location : Base
+    public class Location : Base2
     {
         public string Name { get; set; }
 
