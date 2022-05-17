@@ -60,7 +60,7 @@ namespace Insomnia.Portal.API.Controllers
             return Result(locations);
         }
 
-        [HttpGet("{0}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var location = await _location.Get(id);
@@ -68,7 +68,7 @@ namespace Insomnia.Portal.API.Controllers
             return Result(location);
         }
 
-        [HttpGet("{0}/full")]
+        [HttpGet("{id}/full")]
         public async Task<IActionResult> GetFull(int id)
         {
             var location = await _location.GetFull(id);

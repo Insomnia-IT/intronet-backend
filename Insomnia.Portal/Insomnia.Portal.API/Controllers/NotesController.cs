@@ -62,7 +62,7 @@ namespace Insomnia.Portal.API.Controllers
             return Result(notes);
         }
 
-        [HttpGet("{0}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var note = await _board.Get(id);

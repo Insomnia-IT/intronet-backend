@@ -35,7 +35,7 @@ namespace Insomnia.Portal.API.Controllers
             return Result(directions);
         }
 
-        [HttpGet("{0}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var direction = await _direction.Get(id);

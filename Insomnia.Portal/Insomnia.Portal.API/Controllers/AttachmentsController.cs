@@ -62,19 +62,5 @@ namespace Insomnia.Portal.API.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-        [HttpGet("kostil/{guid}")]
-        public async Task<IActionResult> GetFile(Guid guid)
-        {
-            try
-            {
-                var result = await _attachment.GetFile(guid);
-                return File(result.Item1.ToArray(), "application/octet-stream", result.Item2);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
     }
 }

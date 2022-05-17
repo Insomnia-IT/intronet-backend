@@ -27,7 +27,7 @@ namespace Insomnia.Portal.API.Controllers
             _schedule = schedule;
         }
 
-        [HttpGet("{0}")]
+        [HttpGet("{locationId}")]
         public async Task<IActionResult> Get(int locationId)
         {
             var tag = await _schedule.Get(locationId);
