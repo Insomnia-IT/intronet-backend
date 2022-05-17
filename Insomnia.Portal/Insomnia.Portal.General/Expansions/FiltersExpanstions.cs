@@ -63,7 +63,7 @@ namespace Insomnia.Portal.General.Expansions
             var result = entity.Skip(filter.Page * filter.Count);
             result = result.Take(filter.Count);
 
-            return result;
+            return result.OrderByDescending;
         }
 
         private static async Task<IList<T>> BaseFilterToListAsync<T>(this IQueryable<T> entity, BaseFilter filter)
