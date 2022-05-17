@@ -30,8 +30,6 @@ namespace Insomnia.Portal.BI.Services
 
         public async Task Edit(TimetableDto schedule)
         {
-            var x = 0;
-            x++;
         }
 
         public async Task<ScheduleReturn> Get(int locationId)
