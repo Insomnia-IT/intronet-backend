@@ -34,6 +34,11 @@ namespace Insomnia.Portal.BI.Services
             return Directions.SingleOrDefault(x => x.Id == directionId);
         }
 
+        private async Task<Direction> GetEntityAsync(int directionId)
+        {
+            return await Directions.SingleOrDefaultAsync(x => x.Id == directionId);
+        }
+
         private Direction GetLastEntity()
         {
             return Directions.OrderByDescending(x => x.Id).FirstOrDefault();
@@ -46,7 +51,7 @@ namespace Insomnia.Portal.BI.Services
 
         public Direction Create(int directionId)
         {
-            var entity = GetTagEntityModel(directionId);
+            var entity = GetDirectionEntityModel(directionId);
 
             _context.Add(entity);
             _context.SaveChanges();
@@ -61,7 +66,7 @@ namespace Insomnia.Portal.BI.Services
 
             if (newDirections.Any())
             {
-                _context.Directions.AddRange(newDirections.Select(x => GetTagEntityModel(x)));
+                _context.Directions.AddRange(newDirections.Select(x => GetDirectionEntityModel(x)));
                 _context.SaveChanges();
             }
             else
@@ -105,11 +110,18 @@ namespace Insomnia.Portal.BI.Services
             return entities;
         }
 
-        private Direction GetTagEntityModel(int directionId) => new Direction()
-        {
-            Name = directionId.ToString(),
-            Image = StaticValues.DefaultImageForLocationDirection,
-        };
+        private Direction GetDirectionEntityModel(int directionId) => directionId > 1 && GetLastEntity().Id > directionId ?
+            new Direction()
+            {
+                Id = directionId,
+                Name = directionId.ToString(),
+                Image = StaticValues.DefaultImageForLocationDirection,
+            } :
+            new Direction()
+            {
+                Name = directionId.ToString(),
+                Image = StaticValues.DefaultImageForLocationDirection,
+            };
 
         public async Task<DirectionReturn> Add(CreateDirection direction)
         {
@@ -135,7 +147,7 @@ namespace Insomnia.Portal.BI.Services
         {
             try
             {
-                var entity = await Directions.FirstOrDefaultAsync(x => x.Id == direction.Id);
+                var entity = await GetEntityAsync(direction.Id);
                 if (entity == null)
                     return NotFound("Направление с указанным ID не найден!");
 
@@ -154,9 +166,12 @@ namespace Insomnia.Portal.BI.Services
 
         public async Task<DirectionReturn> Delete(int id)
         {
+            if (id == StaticValues.DefaultIdForLocationDirection)
+                return Error("Нельзя удалить данное направление!");
+
             try
             {
-                var entity = GetEntity(id);
+                var entity = await GetEntityAsync(id);
 
                 if (entity is null)
                     return NotFound("Направление не найдено!");

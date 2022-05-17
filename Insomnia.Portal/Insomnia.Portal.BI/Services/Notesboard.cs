@@ -47,7 +47,7 @@ namespace Insomnia.Portal.BI.Services
         {
             try
             {
-                var entity = await Notes.FirstOrDefaultAsync(x => x.Id == note.Id);
+                var entity = await GetEntityAsync(note.Id);
                 if (entity == null)
                     return NotFound("Запись с указанным ID не найдена!");
 
@@ -68,7 +68,7 @@ namespace Insomnia.Portal.BI.Services
         {
             try
             {
-                var entity = GetEntity(id);
+                var entity = await GetEntityAsync(id);
 
                 if (entity is null)
                     return NotFound("Запись не найдена!");
@@ -85,6 +85,11 @@ namespace Insomnia.Portal.BI.Services
             }
         }
 
+        private async Task<Note> GetEntityAsync(int noteId)
+        {
+            return await Notes.SingleOrDefaultAsync(x => x.Id == noteId);
+        }
+
         public async Task<NoteReturn> Get(int id)
         {
             var note = await Notes.FirstOrDefaultAsync(x => x.Id == id);
@@ -97,7 +102,7 @@ namespace Insomnia.Portal.BI.Services
 
         public async Task<NotesboardReturn> GetAll()
         {
-            var notes = await Notes.ToListAsync();
+            var notes = await Notes.OrderByDescending(x => x.CreatedDate).ToListAsync();
 
             if (notes.IsEmptyOrNull())
                 return NotFoundArray("Список записей пуст!");

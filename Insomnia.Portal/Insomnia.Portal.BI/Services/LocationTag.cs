@@ -104,10 +104,16 @@ namespace Insomnia.Portal.BI.Services
             return entities;
         }
 
-        private Tag GetTagEntityModel(int tag) => new Tag()
-        {
-            Name = tag.ToString(),
-        };
+        private Tag GetTagEntityModel(int tag) => tag > 1 && GetLastEntity().Id > tag ?
+            new Tag()
+            {
+                Id = tag,
+                Name = tag.ToString(),
+            } :
+            new Tag()
+            {
+                Name = tag.ToString(),
+            };
 
         public async Task<TagReturn> Add(CreateTag tag)
         {

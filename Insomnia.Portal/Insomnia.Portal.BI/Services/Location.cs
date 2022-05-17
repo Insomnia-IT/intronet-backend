@@ -22,6 +22,11 @@ namespace Insomnia.Portal.BI.Services
         {
         }
 
+        private async Task<Data.Entity.Location> GetEntityAsync(int locationId)
+        {
+            return await Locations.SingleOrDefaultAsync(x => x.Id == locationId);
+        }
+
         public async Task<LocationReturn> Add(CreateLocation location)
         {
             try
@@ -46,7 +51,7 @@ namespace Insomnia.Portal.BI.Services
         {
             try
             {
-                var entity = await Locations.FirstOrDefaultAsync(x => x.Id == location.Id);
+                var entity = await GetEntityAsync(location.Id);
                 if (entity == null)
                     return NotFound("Локация с указанным ID не найдена!");
 
@@ -67,7 +72,7 @@ namespace Insomnia.Portal.BI.Services
         {
             try
             {
-                var entity = GetEntity(id);
+                var entity = await GetEntityAsync(id);
 
                 if (entity is null)
                     return NotFound("Локация не найдена!");

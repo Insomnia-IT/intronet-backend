@@ -14,6 +14,7 @@ using Insomnia.Portal.General.Expansions;
 using Insomnia.Portal.Data.Enums;
 using Insomnia.Portal.Data.ViewModels.Input;
 using Insomnia.Portal.Data.Entity;
+using Insomnia.Portal.Data.Generic;
 
 namespace Insomnia.Portal.BI.Services
 {
@@ -33,9 +34,19 @@ namespace Insomnia.Portal.BI.Services
             return Categories.SingleOrDefault(x => x.Id == categoryId);
         }
 
-        private NoteCategory GetLastEntity()
+        public async Task<NoteCategory> GetEntityAsync(int categoryId)
         {
-            return Categories.OrderByDescending(x => x.Id).FirstOrDefault();
+            return await CategoriesFull.SingleOrDefaultAsync(x => x.Id == categoryId);
+        }
+
+        private NoteCategory GetLastEntity(int id = 0)
+        {
+            return id == 0 ? Categories.OrderByDescending(x => x.Id).FirstOrDefault() : GetEntity(id);
+        }
+
+        private async Task<NoteCategory> GetLastEntityAsync()
+        {
+            return await Categories.OrderByDescending(x => x.Id).FirstOrDefaultAsync();
         }
 
         private IList<NoteCategory> GetLastEntities(int count)
@@ -74,14 +85,14 @@ namespace Insomnia.Portal.BI.Services
             var category = await CategoriesFull.FirstOrDefaultAsync(x => x.Id == id);
 
             if (category is null)
-                return NotFound("Категория не найден!");
+                return NotFound("Категория не найдена!");
 
             return Ok(category);
         }
 
         public async Task<NoteCategoriesReturn> GetAll()
         {
-            var categories = await CategoriesFull.ToListAsync();
+            var categories = await CategoriesFull.OrderBy(x => x.Id).ToListAsync();
 
             if (categories.IsEmptyOrNull())
                 return NotFoundArray("Список категорий пуст!");
@@ -104,10 +115,16 @@ namespace Insomnia.Portal.BI.Services
             return entities;
         }
 
-        private NoteCategory GetNoteCategoryEntityModel(int categoryId) => new NoteCategory()
-        {
-            Name = categoryId.ToString(),
-        };
+        private NoteCategory GetNoteCategoryEntityModel(int categoryId) => categoryId > 1 && GetLastEntity().Id > categoryId ?
+            new NoteCategory()
+            {
+                Id = categoryId,
+                Name = categoryId.ToString(),
+            } :
+            new NoteCategory()
+            {
+                Name = categoryId.ToString(),
+            };
 
         public async Task<NoteCategoryReturn> Add(CreateNoteCategory category)
         {
@@ -152,12 +169,18 @@ namespace Insomnia.Portal.BI.Services
 
         public async Task<NoteCategoryReturn> Delete(int id)
         {
+            if (id == StaticValues.DefaultIdNoteCategories)
+                return Error("Нельзя удалить данную категорию!");
+
             try
             {
-                var entity = GetEntity(id);
+                var entity = await GetEntityAsync(id);
 
                 if (entity is null)
                     return NotFound("Категория не найден!");
+
+                foreach(var note in entity.Notes)
+                    note.CategoryId = StaticValues.DefaultIdNoteCategories;
 
                 _context.Remove(entity);
                 await _context.SaveChangesAsync();
@@ -175,7 +198,14 @@ namespace Insomnia.Portal.BI.Services
 
         private NoteCategoryReturn Error(string errorMessage) => base.Error<NoteCategoryReturn>(errorMessage);
 
-        private NoteCategoriesReturn Ok(IList<NoteCategory> categories) => Ok(categories.ToDto<IList<NoteCategoryDto>>(_mapper).ToReturn<NoteCategoriesReturn>());
+        private NoteCategoriesReturn Ok(IList<NoteCategory> categories)
+        {
+            var list = categories.ToDto<IList<NoteCategoryDto>>(_mapper);
+
+            list[0].Count = list.Sum(x => x.Count);
+
+            return Ok(list.ToReturn<NoteCategoriesReturn>());
+        }
 
         private NoteCategoriesReturn Errors(string errorMessage) => base.Error<NoteCategoriesReturn>(errorMessage);
 
