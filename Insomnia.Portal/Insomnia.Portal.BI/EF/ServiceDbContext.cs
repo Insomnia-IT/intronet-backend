@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Insomnia.Portal.General.Expansions;
 
 namespace Insomnia.Portal.EF
 {
@@ -48,7 +49,7 @@ namespace Insomnia.Portal.EF
         {
             var entries = ChangeTracker.Entries();
             var utcNow = DateTime.UtcNow;
-            var nameType = "";
+            var nameType = new List<string>();
             HistoryElementtable newHistory = null;
 
             foreach (var entry in entries)
@@ -70,11 +71,13 @@ namespace Insomnia.Portal.EF
                 }
                 if (entry.Entity is BaseCashing2 || entry.Entity is BaseCashing)
                 {
-                    nameType = entry.Entity.GetType().Name;
+                    if (new[] { EntityState.Added, EntityState.Modified }.Contains(entry.State))
+                        nameType.AddGroupBy(entry.Entity.GetType().Name);
                 }
                 else if (entry.Entity is Elementtable || entry.Entity is Timetable)
                 {
-                    nameType = nameof(Location);
+                    if (new[] { EntityState.Added, EntityState.Modified }.Contains(entry.State))
+                        nameType.AddGroupBy(nameof(Location));
                 }
                 if (entry.Entity is Attachment attach)
                 {
@@ -100,7 +103,7 @@ namespace Insomnia.Portal.EF
                     }
                 }
             }
-            if(!String.IsNullOrEmpty(nameType))
+            if(!nameType.IsEmptyOrNull())
                 UpdateCash(nameType);
 
             if (newHistory is not null)
@@ -114,17 +117,16 @@ namespace Insomnia.Portal.EF
         }
 
         //ДА. ЭТО КОСТЫЛЬ. НО ПЛЕВАТЬ))
-        private void UpdateCash(string name)
+        private void UpdateCash(List<string> names)
         {
-            var cash = Cash.SingleOrDefault(x => x.Name == name);
+            var cashs = Cash.Where(x => names.Contains(x.Name)).ToList();
             var utcNow = DateTime.UtcNow;
 
-            if (cash is null)
+            foreach (var name in names.Except(cashs.Select(x => x.Name)))
             {
-                cash = new Cash() { Name = name, Version = 1, CreatedDate = utcNow };
-                Cash.Add(cash);
+                Cash.Add(new Cash() { Name = name, Version = 1, CreatedDate = utcNow });
             }
-            else
+            foreach(var cash in cashs)
             {
                 cash.Version += 0.01;
                 cash.ModifiedDate = utcNow;

@@ -36,5 +36,15 @@ namespace Insomnia.Portal.General.Expansions
                 return enumerable.ToList();
             return null;
         }
+
+        public static IList<T> AddGroupBy<T>(this List<T> list, T element)
+        {
+            if(list.Contains(element))
+                return list;
+            
+            list.Add(element);
+
+            return list;
+        }
     }
 }
