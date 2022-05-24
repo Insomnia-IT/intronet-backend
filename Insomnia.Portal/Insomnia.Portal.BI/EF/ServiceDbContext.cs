@@ -129,6 +129,7 @@ namespace Insomnia.Portal.EF
             foreach(var cash in cashs)
             {
                 cash.Version += 0.01;
+                cash.Version = Math.Round(cash.Version, 2);
                 cash.ModifiedDate = utcNow;
                 Cash.Update(cash);
             }
