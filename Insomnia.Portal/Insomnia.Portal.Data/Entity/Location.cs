@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Insomnia.Portal.Data.Entity
 {
-    public class Location : Base2
+    public class Location : BaseCashing2
     {
         public string Name { get; set; }
 
@@ -24,8 +24,10 @@ namespace Insomnia.Portal.Data.Entity
 
         public Direction Direction { get; set; }
 
-        public virtual ICollection<Tag> Tags { get; set; }
+        public virtual IList<Tag> Tags { get; set; }
 
-        public virtual ICollection<Timetable> Timetables { get; set; }
+        public virtual List<Timetable> Timetables { get; set; }
+
+        public string? Menu { get; set; }
     }
 }

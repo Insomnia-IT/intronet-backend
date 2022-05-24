@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Insomnia.Portal.Data.Enums;
 
 namespace Insomnia.Portal.Data.Entity
 {
-    public class Tag : BaseCashing
+    public class AudienceElement : Base
     {
-        public string Name { get; set; }
+        public int Number { get; set; }
 
-        public ICollection<Location> Locations { get; set; }
+        public virtual List<Elementtable> Elements { get; set; }
     }
 }

@@ -4,16 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Insomnia.Portal.Data.Entity
+namespace Insomnia.Portal.Data.Dto
 {
-    public class Menu : Base2
+    public class ElementtableDto
     {
         public string Description { get; set; }
 
-        public int Cost { get; set; }
+        public DateTime Time { get; set; }
 
-        public virtual ICollection<HistoryElementtable> History { get; set; }
+        public string Speaker { get; set; }
 
         public bool IsCanceled { get; set; }
+
+        public string Changes { get; set; }
     }
 }

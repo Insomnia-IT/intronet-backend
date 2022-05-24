@@ -11,7 +11,5 @@ namespace Insomnia.Portal.Data.Entity
         public DateTime CreatedDate { get; set; }
 
         public DateTime ModifiedDate { get; set; }
-
-        public bool IsUpdated { get; set; }
     }
 }

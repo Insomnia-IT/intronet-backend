@@ -17,7 +17,7 @@ using Insomnia.Portal.Data.Generic;
 
 namespace Insomnia.Portal.API.Configurations.AutoMapper
 {
-    public class FormatterTagToCreateOrEditLocation : IValueResolver<CreateLocation, Location, ICollection<Tag>>
+    public class FormatterTagToCreateOrEditLocation : IValueResolver<CreateLocation, Location, IList<Tag>>
     {
         private readonly IEntityTag _tag;
 
@@ -26,10 +26,10 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
             _tag = tag;
         }
 
-        public ICollection<Tag> Resolve(CreateLocation source, Location location, ICollection<Tag> result, ResolutionContext context)
+        public IList<Tag> Resolve(CreateLocation source, Location location, IList<Tag> result, ResolutionContext context)
         {
             if (source.Tags.IsEmptyOrNull())
-                return new List<Tag>();
+                return location.Tags ?? new List<Tag>();
 
             var tags = _tag.GetEntitiesOrCreating(source.Tags);
 
@@ -48,8 +48,8 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
 
         public NoteCategory Resolve(CreateNote source, Note note, NoteCategory result, ResolutionContext context)
         {
-            if (source.CategoryId <= 0)
-                source.CategoryId = StaticValues.DefaultIdNoteCategories;
+            if (source.CategoryId <= StaticValues.DefaultIdNoteCategories)
+                source.CategoryId = note.CategoryId >= StaticValues.DefaultIdNoteCategories ? note.CategoryId : StaticValues.DefaultIdNoteCategories;
 
             var category = _categories.GetEntityOrCreating(source.CategoryId);
 
@@ -68,6 +68,9 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
 
         public Direction Resolve(CreateLocation source, Location location, Direction result, ResolutionContext context)
         {
+            if (source.DirectionId <= 0)
+                source.DirectionId = location.DirectionId;
+
             var direction = _direction.GetEntityOrCreating(source.DirectionId);
 
             return direction;

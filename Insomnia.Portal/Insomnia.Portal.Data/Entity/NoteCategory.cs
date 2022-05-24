@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Insomnia.Portal.Data.Entity
 {
-    public class NoteCategory : Base
+    public class NoteCategory : BaseCashing
     {
         public string Name { get; set; }
 

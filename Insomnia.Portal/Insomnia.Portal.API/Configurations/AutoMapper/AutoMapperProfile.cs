@@ -8,6 +8,7 @@ using System.Linq;
 using Insomnia.Portal.Data.Dto;
 using Insomnia.Portal.Data.ViewModels.Input;
 using Insomnia.Portal.Data.Enums;
+using Insomnia.Portal.General.Expansions;
 
 namespace Insomnia.Portal.API.Configurations.AutoMapper
 {
@@ -21,14 +22,20 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
 
             CreateMap<EditLocation, Location>()
                 .ForMember(x => x.Tags, s => s.MapFrom<FormatterTagToCreateOrEditLocation>())
-                .ForMember(x => x.Direction, s => s.MapFrom<FormatterDirectionToCreateOrEditLocation>());
+                .ForMember(x => x.Direction, s => s.MapFrom<FormatterDirectionToCreateOrEditLocation>())
+                .ForMember(dest => dest.Lat, opt => opt.Condition(src => src.Lat > 0))
+                .ForMember(dest => dest.Lon, opt => opt.Condition(src => src.Lon > 0))
+                .ForMember(dest => dest.X, opt => opt.Condition(src => src.X > 0))
+                .ForMember(dest => dest.Y, opt => opt.Condition(src => src.Y > 0))
+                .ForMember(dest => dest.DirectionId, opt => opt.Condition(src => src.DirectionId > 0));
 
             CreateMap<LocationDto, Location>()
                 .ReverseMap();
 
             CreateMap<CreateTag, Tag>();
 
-            CreateMap<EditTag, Tag>();
+            CreateMap<EditTag, Tag>()
+                .ForMember(x => x.Name, y => y.Condition(src => !String.IsNullOrEmpty(src.Name) && src.Name != "string"));
 
             CreateMap<TagDto, Tag>()
                 .ReverseMap();
@@ -37,7 +44,9 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
                 .ForMember(x => x.Category, s => s.MapFrom<FormatterCategoryToCreateOrEditNote>());
 
             CreateMap<EditNote, Note>()
-                .ForMember(x => x.Category, s => s.MapFrom<FormatterCategoryToCreateOrEditNote>());
+                .ForMember(x => x.Category, s => s.MapFrom<FormatterCategoryToCreateOrEditNote>())
+                .ForMember(x => x.Title, y => y.Condition(src => !String.IsNullOrEmpty(src.Title) && src.Title != "string"))
+                .ForMember(x => x.Text, y => y.Condition(src => !String.IsNullOrEmpty(src.Text) && src.Text != "string"));
 
             CreateMap<NoteDto, Note>()
                 .ReverseMap();

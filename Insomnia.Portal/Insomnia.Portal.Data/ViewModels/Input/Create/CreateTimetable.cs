@@ -5,18 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Insomnia.Portal.Data.Enums;
 
-namespace Insomnia.Portal.Data.Entity
+namespace Insomnia.Portal.Data.ViewModels.Input
 {
-    public class Timetable : Base
+    public class CreateTimetable
     {
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public int LocationId { get; set; }
 
-        public Location Location { get; set; }
+        public List<CreateAudienceElement> Audiences { get; set; }
 
         public Day Day { get; set; }
-    
-        public virtual List<AudienceElement> Audiences { get; set; }
     }
 }

@@ -161,8 +161,8 @@ namespace Insomnia.Portal.BI.Services
 
         private LocationsReturn NotFoundArray(string errorMessage) => base.Error<LocationsReturn>(errorMessage, Data.Enums.CodeRequest.NotFound);
 
-        private IQueryable<Data.Entity.Location> Locations => _context.Locations;
+        private IQueryable<Data.Entity.Location> Locations => _context.Locations.Include(x => x.Tags);
 
-        private IQueryable<Data.Entity.Location> LocationsFull => _context.Locations.Include(x => x.Tags);
+        private IQueryable<Data.Entity.Location> LocationsFull => _context.Locations.Include(x => x.Tags).Include(x => x.Timetables).ThenInclude(x => x.Select(y => y.Audiences)).ThenInclude(x => x.Select(y => y.Elements)).ThenInclude(x => x.Select(y => y.History));
     }
 }

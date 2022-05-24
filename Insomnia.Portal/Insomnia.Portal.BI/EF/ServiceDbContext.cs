@@ -18,10 +18,12 @@ namespace Insomnia.Portal.EF
         public DbSet<NoteCategory> NoteCategories { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Direction> Directions { get; set; }
+        public DbSet<HistoryElementtable> HistoryElements { get; set; }
+        public DbSet<Cash> Cash { get; set; }
 
         public ServiceDbContext(DbContextOptions<ServiceDbContext> option) : base(option)
         {
-            //Database.EnsureDeleted();
+           // Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
@@ -46,6 +48,8 @@ namespace Insomnia.Portal.EF
         {
             var entries = ChangeTracker.Entries();
             var utcNow = DateTime.UtcNow;
+            var nameType = "";
+            HistoryElementtable newHistory = null;
 
             foreach (var entry in entries)
             {
@@ -64,6 +68,14 @@ namespace Insomnia.Portal.EF
                             break;
                     }
                 }
+                if (entry.Entity is BaseCashing2 || entry.Entity is BaseCashing)
+                {
+                    nameType = entry.Entity.GetType().Name;
+                }
+                else if (entry.Entity is Elementtable || entry.Entity is Timetable)
+                {
+                    nameType = nameof(Location);
+                }
                 if (entry.Entity is Attachment attach)
                 {
                     switch (entry.State)
@@ -73,7 +85,50 @@ namespace Insomnia.Portal.EF
                             break;
                     }
                 }
+                if (entry.Entity is Elementtable elementtable)
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Modified:
+                            newHistory = new HistoryElementtable()
+                            {
+                                CreatedDateTimeOldValue = utcNow,
+                                OldValue = elementtable.Time.ToString("t"),
+                                TimetableId = elementtable.Id,
+                            };
+                            break;
+                    }
+                }
+            }
+            if(!String.IsNullOrEmpty(nameType))
+                UpdateCash(nameType);
 
+            if (newHistory is not null)
+                AddHistory(newHistory);
+        }
+
+
+        private void AddHistory(HistoryElementtable history)
+        {
+            HistoryElements.Add(history);
+        }
+
+        //ДА. ЭТО КОСТЫЛЬ. НО ПЛЕВАТЬ))
+        private void UpdateCash(string name)
+        {
+            var cash = Cash.SingleOrDefault(x => x.Name == name);
+            var utcNow = DateTime.UtcNow;
+
+            if (cash is null)
+            {
+                cash = new Cash() { Name = name, Version = 1, CreatedDate = utcNow };
+                Cash.Add(cash);
+            }
+            else
+            {
+                cash.Version += 0.01;
+                cash.ModifiedDate = utcNow;
+                Cash.Update(cash);
             }
         }
 

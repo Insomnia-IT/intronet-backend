@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace Insomnia.Portal.Data.ViewModels.Input
 {
-    public class CreateTimetable
+    public class EditMenu
     {
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
         public int LocationId { get; set; }
 
-        public ICollection<CreateElementtable> Elements { get; set; }
+        public string Text { get; set; }
     }
 }

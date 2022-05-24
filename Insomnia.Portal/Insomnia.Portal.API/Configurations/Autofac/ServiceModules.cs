@@ -45,6 +45,9 @@ namespace Insomnia.Portal.API.Configurations.Autofac
             builder.RegisterType<AttachmentService>()
                 .As<IAttachment>();
 
+            builder.RegisterType<CashTables>()
+                .As<ICash>();
+
             builder.RegisterType<FormatterTagToCreateOrEditLocation>();
 
             builder.RegisterType<FormatterCategoryToCreateOrEditNote>();

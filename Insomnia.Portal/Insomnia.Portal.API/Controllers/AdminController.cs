@@ -26,9 +26,10 @@ namespace Insomnia.Portal.API.Controllers
         private readonly IAdminSchedule _schedule;
         private readonly IAdminNotesCategories _notescategories;
         private readonly IAdminDirection _direction;
+        private readonly IAdminLocationMenu _locationMenu;
 
         public AdminController(ILogger<AdminController> logger, IMapper mapper,
-            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction)
+            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction, IAdminLocationMenu locationMenu)
         {
             _logger = logger;
             _mapper = mapper;
@@ -38,6 +39,7 @@ namespace Insomnia.Portal.API.Controllers
             _schedule = schedule;
             _notescategories = notescategories;
             _direction = direction;
+            _locationMenu = locationMenu;
         }
 
         #region Locations
@@ -85,6 +87,40 @@ namespace Insomnia.Portal.API.Controllers
             try
             {
                 var result = await _location.Delete(id);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("locations/menu/edit")]
+        public async Task<IActionResult> EditLocationMenu([FromBody] EditMenu model)
+        {
+            //Перенести в Middleware
+            if (model == null)
+                return BadRequest("Пустая модель запроса!");
+
+            try
+            {
+                var result = await _locationMenu.Edit(model);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("locations/menu/delete/{id}")]
+        public async Task<IActionResult> DeleteLocationMenu(int id)
+        {
+            try
+            {
+                var result = await _locationMenu.Delete(id);
 
                 return Result(result);
             }

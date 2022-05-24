@@ -23,5 +23,9 @@ namespace Insomnia.Portal.Data.Dto
         public string Image { get; set; }
 
         public TagDto[] Tags { get; set; }
+
+        public string Menu { get; set; }
+
+        public IList<TimetableDto> Timetables { get; set; }
     }
 }

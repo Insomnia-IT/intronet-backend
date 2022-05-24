@@ -29,7 +29,7 @@ namespace Insomnia.Portal.General.Expansions
                 {
                     return (await notes.Where(x => filter.CategoriesIds.Contains(x.CategoryId)).ToListAsync())
                             .GroupBy(x => x.CategoryId)
-                            .SelectMany(x => x.BaseFilter(filter)).ToList();
+                            .SelectMany(x => x.BaseFilter(filter)).OrderByDescending(x => x.CreatedDate).ToList();
                 }
                 else
                 {
@@ -42,7 +42,7 @@ namespace Insomnia.Portal.General.Expansions
                 {
                     return notes.AsEnumerable()
                            .GroupBy(x => x.CategoryId)
-                           .SelectMany(x => x.BaseFilter(filter))
+                           .SelectMany(x => x.BaseFilter(filter)).OrderByDescending(x => x.CreatedDate)
                            .ToList();
                 }
             }

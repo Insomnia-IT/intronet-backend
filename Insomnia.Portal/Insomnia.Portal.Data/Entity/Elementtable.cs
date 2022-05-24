@@ -16,7 +16,7 @@ namespace Insomnia.Portal.Data.Entity
 
         public Timetable Timetable { get; set; }
 
-        public virtual ICollection<HistoryElementtable> History { get; set; }
+        public virtual List<HistoryElementtable> History { get; set; }
 
         public bool IsCanceled { get; set; }
     }

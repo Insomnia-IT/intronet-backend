@@ -42,7 +42,7 @@ namespace Insomnia.Portal.BI.Services
 
         }
 
-        public async Task GetTimetableHistory(int timetableId)
+        public async Task GetTimetablesForLocation(int timetableId)
         {
 
         }
