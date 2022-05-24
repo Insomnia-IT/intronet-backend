@@ -27,6 +27,16 @@ namespace Insomnia.Portal.API.Controllers
             _cash = cash;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> CashGetAll()
+        {
+            var version = await _cash.GetAll();
+
+            Response.Headers.Add("Version", $"{version}");
+
+            return Ok(version);
+        }
+
         [HttpGet("{name}")]
         public async Task<IActionResult> CashGet(string name)
         {
