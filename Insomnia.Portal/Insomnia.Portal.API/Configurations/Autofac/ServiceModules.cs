@@ -48,6 +48,9 @@ namespace Insomnia.Portal.API.Configurations.Autofac
             builder.RegisterType<CashTables>()
                 .As<ICash>();
 
+            builder.RegisterType<Menu>()
+                .As<IAdminLocationMenu>();
+
             builder.RegisterType<FormatterTagToCreateOrEditLocation>();
 
             builder.RegisterType<FormatterCategoryToCreateOrEditNote>();
