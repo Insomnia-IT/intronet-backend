@@ -53,7 +53,8 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
 
             CreateMap<CreateNoteCategory, NoteCategory>();
 
-            CreateMap<EditNoteCategory, NoteCategory>();
+            CreateMap<EditNoteCategory, NoteCategory>()
+                .ForMember(x => x.Color, s => s.MapFrom(x => !String.IsNullOrEmpty(x.Color) && x.Color != "string"));
 
             CreateMap<NoteCategoryDto, NoteCategory>();
 

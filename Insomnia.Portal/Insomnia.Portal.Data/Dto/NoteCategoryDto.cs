@@ -12,6 +12,8 @@ namespace Insomnia.Portal.Data.Dto
 
         public string Name { get; set; }
 
+        public string Color { get; set; }
+
         public int Count { get; set; }
     }
 }

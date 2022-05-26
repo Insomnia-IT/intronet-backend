@@ -11,5 +11,7 @@ namespace Insomnia.Portal.Data.ViewModels.Input
     {
         [Required]
         public string Name { get; set; }
+
+        public string Color { get; set; }
     }
 }

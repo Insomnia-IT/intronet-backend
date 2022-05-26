@@ -10,6 +10,8 @@ namespace Insomnia.Portal.Data.Entity
     {
         public string Name { get; set; }
 
+        public string Color { get; set; }
+
         public ICollection<Note> Notes { get; set; }
     }
 }
