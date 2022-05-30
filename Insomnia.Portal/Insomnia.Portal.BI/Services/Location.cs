@@ -61,7 +61,7 @@ namespace Insomnia.Portal.BI.Services
                 await _context.SaveChangesAsync();
                 return Ok<LocationReturn>();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //добавить логгер
                 return Error(ex.Message);
@@ -163,6 +163,9 @@ namespace Insomnia.Portal.BI.Services
 
         private IQueryable<Data.Entity.Location> Locations => _context.Locations.Include(x => x.Tags);
 
-        private IQueryable<Data.Entity.Location> LocationsFull => _context.Locations.Include(x => x.Tags).Include(x => x.Timetables).ThenInclude(x => x.Select(y => y.Audiences)).ThenInclude(x => x.Select(y => y.Elements)).ThenInclude(x => x.Select(y => y.History));
+        private IQueryable<Data.Entity.Location> LocationsFull => _context.Locations
+            .Include(x => x.Tags)
+            .Include(x => x.Timetables).ThenInclude(x => x.Audiences).ThenInclude(x => x.Elements).ThenInclude(x => x.History)
+            .Include(x => x.Direction);
     }
 }

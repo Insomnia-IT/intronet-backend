@@ -51,6 +51,9 @@ namespace Insomnia.Portal.API.Configurations.Autofac
             builder.RegisterType<Menu>()
                 .As<IAdminLocationMenu>();
 
+            builder.RegisterType<Cartoons>()
+                .As<ICartoons>();
+
             builder.RegisterType<FormatterTagToCreateOrEditLocation>();
 
             builder.RegisterType<FormatterCategoryToCreateOrEditNote>();
