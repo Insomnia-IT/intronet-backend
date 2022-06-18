@@ -33,9 +33,10 @@ namespace Insomnia.Portal.API.Controllers
         private readonly IAdminNotesCategories _notescategories;
         private readonly IAdminDirection _direction;
         private readonly IAdminLocationMenu _locationMenu;
+        private readonly IAdminBlog _blog;
 
         public AdminController(ILogger<AdminController> logger, IMapper mapper,
-            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction, IAdminLocationMenu locationMenu, AuthConfig config)
+            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction, IAdminLocationMenu locationMenu, AuthConfig config, IAdminBlog blog)
         {
             _logger = logger;
             _mapper = mapper;
@@ -47,6 +48,7 @@ namespace Insomnia.Portal.API.Controllers
             _direction = direction;
             _locationMenu = locationMenu;
             _config = config;
+            _blog = blog;
         }
 
         [AllowAnonymous]
@@ -275,13 +277,13 @@ namespace Insomnia.Portal.API.Controllers
 
         #region Notes
 
-        [User("admin")]
         [HttpPost("notes/add")]
         public async Task<IActionResult> AddNote([FromBody] CreateNote model)
         {
             try
             {
-                var result = await _notesboard.Add(model);
+                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderToken] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderToken];
+                var result = await _notesboard.Add(model, userName);
 
                 return Result(result);
             }
@@ -291,7 +293,6 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
-        [User("admin")]
         [HttpPut("notes/edit")]
         public async Task<IActionResult> EditNote([FromBody] EditNote model)
         {
@@ -303,7 +304,12 @@ namespace Insomnia.Portal.API.Controllers
 
             try
             {
-                var result = await _notesboard.Edit(model);
+                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderToken] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderToken];
+
+                if (userName == _config.AdminToken)
+                    userName = "admin";
+
+                var result = await _notesboard.Edit(model, userName);
 
                 return Result(result);
             }
@@ -313,13 +319,17 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
-        [User("admin")]
         [HttpDelete("notes/delete/{id}")]
         public async Task<IActionResult> DeleteNote(int id)
         {
             try
             {
-                var result = await _notesboard.Delete(id);
+                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderToken] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderToken];
+
+                if (userName == _config.AdminToken)
+                    userName = "admin";
+
+                var result = await _notesboard.Delete(id, userName);
 
                 return Result(result);
             }
@@ -378,6 +388,64 @@ namespace Insomnia.Portal.API.Controllers
             try
             {
                 var result = await _notescategories.Delete(id);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Pages
+
+        [User("admin")]
+        [HttpPost("pages/add")]
+        public async Task<IActionResult> AddPage([FromBody] CreatePage model)
+        {
+            try
+            {
+                var result = await _blog.Add(model);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [User("admin")]
+        [HttpPut("pages/edit")]
+        public async Task<IActionResult> EditPage([FromBody] EditPage model)
+        {
+            if (model == null)
+                return BadRequest("Пустая модель запроса!");
+
+            if (model.Id <= 0)
+                return NotFound("Записи с ID = 0 не существует!");
+
+            try
+            {
+                var result = await _blog.Edit(model);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [User("admin")]
+        [HttpDelete("pages/delete/{id}")]
+        public async Task<IActionResult> DeletePage(int id)
+        {
+            try
+            {
+                var result = await _blog.Delete(id);
 
                 return Result(result);
             }

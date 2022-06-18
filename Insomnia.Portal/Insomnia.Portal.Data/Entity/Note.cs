@@ -15,5 +15,7 @@ namespace Insomnia.Portal.Data.Entity
         public int CategoryId { get; set; }
 
         public NoteCategory Category { get; set; }
+
+        public string CreatedBy { get; set; }
     }
 }
