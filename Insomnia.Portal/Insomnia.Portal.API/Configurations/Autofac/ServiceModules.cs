@@ -54,6 +54,10 @@ namespace Insomnia.Portal.API.Configurations.Autofac
             builder.RegisterType<Cartoons>()
                 .As<ICartoons>();
 
+            builder.RegisterType<Blog>()
+                .As<IBlog>()
+                .As<IAdminBlog>();
+
             builder.RegisterType<FormatterTagToCreateOrEditLocation>();
 
             builder.RegisterType<FormatterCategoryToCreateOrEditNote>();

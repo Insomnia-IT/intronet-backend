@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Insomnia.Portal.BI.Options
 {
-    public class Config
+    public class AuthConfig
     {
-        public AttachmentOptions AttachmentsConfig { get; set; }
+        public string AdminToken { get; set; }
 
-        public AuthConfig AuthConfig { get; set; }
+        public string PoteryashkiToken { get; set; }
     }
 }

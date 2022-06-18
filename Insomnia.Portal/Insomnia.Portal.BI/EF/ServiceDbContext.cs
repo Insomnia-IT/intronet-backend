@@ -22,6 +22,8 @@ namespace Insomnia.Portal.EF
         public DbSet<HistoryElementtable> HistoryElements { get; set; }
         public DbSet<Cash> Cash { get; set; }
 
+        public DbSet<Page> Pages { get; set; }
+
         public ServiceDbContext(DbContextOptions<ServiceDbContext> option) : base(option)
         {
            // Database.EnsureDeleted();

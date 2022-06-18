@@ -11,13 +11,19 @@ using System.Threading.Tasks;
 using Insomnia.Portal.Data.ViewModels.Input;
 using Insomnia.Portal.Data.Dto;
 using Insomnia.Portal.BI.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Insomnia.Portal.Data.Attributes;
+using Insomnia.Portal.BI.Options;
+using Insomnia.Portal.Data.Generic;
 
 namespace Insomnia.Portal.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[Controller]")]
     public class AdminController : BaseController
     {
+        private readonly AuthConfig _config;
         private readonly ILogger<AdminController> _logger;
         private readonly IMapper _mapper;
         private readonly IAdminLocation _location;
@@ -29,7 +35,7 @@ namespace Insomnia.Portal.API.Controllers
         private readonly IAdminLocationMenu _locationMenu;
 
         public AdminController(ILogger<AdminController> logger, IMapper mapper,
-            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction, IAdminLocationMenu locationMenu)
+            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction, IAdminLocationMenu locationMenu, AuthConfig config)
         {
             _logger = logger;
             _mapper = mapper;
@@ -40,10 +46,25 @@ namespace Insomnia.Portal.API.Controllers
             _notescategories = notescategories;
             _direction = direction;
             _locationMenu = locationMenu;
+            _config = config;
+        }
+
+        [AllowAnonymous]
+        [HttpGet("auth")]
+        public async Task<IActionResult> Auth([FromQuery] string token)
+        {
+            if (token == _config.AdminToken || token == _config.PoteryashkiToken)
+            {
+                HttpContext.Response.Cookies.Append(ResourcesNaming.HeaderToken, token);
+                return Ok();
+            }
+
+            return Unauthorized();
         }
 
         #region Locations
 
+        [User("admin")]
         [HttpPost("locations/add")]
         public async Task<IActionResult> AddLocation([FromBody] CreateLocation model)
         {
@@ -59,6 +80,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpPut("locations/edit")]
         public async Task<IActionResult> EditLocation([FromBody] EditLocation model)
         {
@@ -81,6 +103,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpDelete("locations/delete/{id}")]
         public async Task<IActionResult> DeleteLocation(int id)
         {
@@ -96,6 +119,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpPut("locations/menu/edit")]
         public async Task<IActionResult> EditLocationMenu([FromBody] EditMenu model)
         {
@@ -115,6 +139,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpDelete("locations/menu/delete/{id}")]
         public async Task<IActionResult> DeleteLocationMenu(int id)
         {
@@ -134,6 +159,7 @@ namespace Insomnia.Portal.API.Controllers
 
         #region Location tags
 
+        [User("admin")]
         [HttpPost("tags/add")]
         public async Task<IActionResult> AddTag([FromBody] CreateTag model)
         {
@@ -149,6 +175,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpPut("tags/edit")]
         public async Task<IActionResult> EditTag([FromBody] EditTag model)
         {
@@ -170,6 +197,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpDelete("tags/delete/{id}")]
         public async Task<IActionResult> DeleteTag(int id)
         {
@@ -189,6 +217,7 @@ namespace Insomnia.Portal.API.Controllers
 
         #region Location directions
 
+        [User("admin")]
         [HttpPost("directions/add")]
         public async Task<IActionResult> AddDirection([FromForm] CreateDirection model)
         {
@@ -204,6 +233,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpPut("directions/edit")]
         public async Task<IActionResult> EditDirection([FromForm] EditDirection model)
         {
@@ -225,6 +255,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpDelete("directions/delete/{id}")]
         public async Task<IActionResult> DeleteDirection(int id)
         {
@@ -244,6 +275,7 @@ namespace Insomnia.Portal.API.Controllers
 
         #region Notes
 
+        [User("admin")]
         [HttpPost("notes/add")]
         public async Task<IActionResult> AddNote([FromBody] CreateNote model)
         {
@@ -259,6 +291,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpPut("notes/edit")]
         public async Task<IActionResult> EditNote([FromBody] EditNote model)
         {
@@ -280,6 +313,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpDelete("notes/delete/{id}")]
         public async Task<IActionResult> DeleteNote(int id)
         {
@@ -299,6 +333,7 @@ namespace Insomnia.Portal.API.Controllers
 
         #region Notes categories
 
+        [User("admin")]
         [HttpPost("notes/categories/add")]
         public async Task<IActionResult> AddNoteCategory([FromBody] CreateNoteCategory model)
         {
@@ -314,6 +349,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpPut("notes/categories/edit")]
         public async Task<IActionResult> EditNoteCategory([FromBody] EditNoteCategory model)
         {
@@ -335,6 +371,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpDelete("notes/categories/delete/{id}")]
         public async Task<IActionResult> DeleteNoteCategory(int id)
         {

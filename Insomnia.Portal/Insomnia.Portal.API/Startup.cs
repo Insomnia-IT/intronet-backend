@@ -4,6 +4,7 @@ using AutoMapper.EquivalencyExpression;
 using Insomnia.Portal.API.Configurations.Autofac;
 using Insomnia.Portal.BI.Options;
 using Insomnia.Portal.EF;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Insomnia.Portal.API.Authentication;
 
 namespace Insomnia.Portal.API
 {
@@ -32,6 +34,12 @@ namespace Insomnia.Portal.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+               .AddAuthentication("UserAuthenticationToken")
+               .AddScheme<AuthenticationSchemeOptions, InsomniaAuthenticationHandler>("UserAuthenticationToken", null);
+
+
+
             services.AddOptions();
 
             services.AddCors(o => o.AddPolicy("AllowAll", builder =>
@@ -68,6 +76,7 @@ namespace Insomnia.Portal.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -84,6 +93,7 @@ namespace Insomnia.Portal.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

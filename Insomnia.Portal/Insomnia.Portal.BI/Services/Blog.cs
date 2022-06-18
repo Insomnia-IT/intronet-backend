@@ -97,6 +97,16 @@ namespace Insomnia.Portal.BI.Services
 
         private PageReturn NotFound(string errorMessage) => base.Error<PageReturn>(errorMessage, CodeRequest.NotFound);
 
+        public Task<PageReturn> Get(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PagesReturn> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
         private IQueryable<Page> Pages => _context.Pages;
 
     }
