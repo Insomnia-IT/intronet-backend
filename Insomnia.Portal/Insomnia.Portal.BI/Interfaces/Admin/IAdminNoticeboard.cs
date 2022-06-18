@@ -10,10 +10,10 @@ namespace Insomnia.Portal.BI.Interfaces
 {
     public interface IAdminNotesboard
     {
-        Task<NoteReturn> Add(CreateNote note);
+        Task<NoteReturn> Add(CreateNote note, string author);
 
-        Task<NoteReturn> Edit(EditNote note);
+        Task<NoteReturn> Edit(EditNote note, string author);
 
-        Task<NoteReturn> Delete(int id);
+        Task<NoteReturn> Delete(int id, string author);
     }
 }

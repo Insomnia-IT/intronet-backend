@@ -9,7 +9,6 @@ namespace Insomnia.Portal.Data.ViewModels.Input
 {
     public class EditAudienceElement : CreateAudienceElement
     {
-        [Required]
         public int Id { get; set; }
 
         public new List<EditElementtable> Elementtables { get; set; }

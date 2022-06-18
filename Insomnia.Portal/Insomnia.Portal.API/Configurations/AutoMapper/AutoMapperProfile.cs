@@ -21,13 +21,29 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
                 .ForMember(x => x.Direction, s => s.MapFrom<FormatterDirectionToCreateOrEditLocation>());
 
             CreateMap<EditLocation, Location>()
-                .ForMember(x => x.Tags, s => s.MapFrom<FormatterTagToCreateOrEditLocation>())
-                .ForMember(x => x.Direction, s => s.MapFrom<FormatterDirectionToCreateOrEditLocation>())
-                .ForMember(dest => dest.Lat, opt => opt.Condition(src => src.Lat > 0))
-                .ForMember(dest => dest.Lon, opt => opt.Condition(src => src.Lon > 0))
-                .ForMember(dest => dest.X, opt => opt.Condition(src => src.X > 0))
-                .ForMember(dest => dest.Y, opt => opt.Condition(src => src.Y > 0))
-                .ForMember(dest => dest.DirectionId, opt => opt.Condition(src => src.DirectionId > 0));
+                .ForMember(x => x.Tags, opt => opt.MapFrom<FormatterTagToCreateOrEditLocation>())
+                .ForMember(x => x.Direction, opt => opt.MapFrom<FormatterDirectionToCreateOrEditLocation>())
+                .ForMember(x => x.Lat, opt => opt.Condition(src => src.Lat > 0))
+                .ForMember(x => x.Lon, opt => opt.Condition(src => src.Lon > 0))
+                .ForMember(x => x.X, opt => opt.Condition(src => src.X > 0))
+                .ForMember(x => x.Y, opt => opt.Condition(src => src.Y > 0))
+                .ForMember(x => x.DirectionId, opt => opt.Condition(src => src.DirectionId > 0))
+                .ForMember(x => x.Name, opt => opt.Condition(src => String.IsNullOrEmpty(src.Name) && src.Name != "string"))
+                .ForMember(x => x.Description, opt => opt.Condition(src => String.IsNullOrEmpty(src.Description) && src.Description != "string"));
+
+            CreateMap<EditElementtable, Elementtable>()
+                .ForMember(x => x.Time, s => s.Ignore())
+                .ForMember(x => x.Name, s => s.Ignore())
+                .ForMember(x => x.Speaker, s => s.Ignore())
+                .ForMember(x => x.Description, s => s.Condition(src => String.IsNullOrEmpty(src.Description) && src.Description != "string"))
+                .ForMember(x => x.Audience, s => s.Ignore())
+                .ForMember(x => x.AudienceId, s => s.Ignore());
+
+            CreateMap<EditTimetable, Timetable>()
+                .ForMember(x => x.Audiences, s => s.Ignore())
+                .ForMember(x => x.Day, s => s.Condition(src => src.Day.HasValue))
+                .ForMember(x => x.Name, s => s.Condition(src => String.IsNullOrEmpty(src.Name) && src.Name != "string"))
+                .ForMember(x => x.LocationId, s => s.Ignore());
 
             CreateMap<LocationDto, Location>()
                 .ReverseMap();
@@ -45,8 +61,8 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
 
             CreateMap<EditNote, Note>()
                 .ForMember(x => x.Category, s => s.MapFrom<FormatterCategoryToCreateOrEditNote>())
-                .ForMember(x => x.Title, y => y.Condition(src => !String.IsNullOrEmpty(src.Title) && src.Title != "string"))
-                .ForMember(x => x.Text, y => y.Condition(src => !String.IsNullOrEmpty(src.Text) && src.Text != "string"));
+                .ForMember(x => x.Title, s => s.Condition(src => !String.IsNullOrEmpty(src.Title) && src.Title != "string"))
+                .ForMember(x => x.Text, s => s.Condition(src => !String.IsNullOrEmpty(src.Text) && src.Text != "string"));
 
             CreateMap<NoteDto, Note>()
                 .ReverseMap();
@@ -77,6 +93,14 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
 
             CreateMap<AttachmentDto, Attachment>()
                 .ReverseMap();
+
+            CreateMap<CreateTimetable, Timetable>();
+
+            CreateMap<CreateAudienceElement, AudienceElement>();
+
+            CreateMap<CreateElementtable, Elementtable>();
+
+            CreateMap<EditAudienceElement, AudienceElement>();
         }
     }
 }

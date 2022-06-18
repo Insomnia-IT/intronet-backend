@@ -11,6 +11,8 @@ namespace Insomnia.Portal.Data.ViewModels.Input
     {
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public double X { get; set; }
 
         public double Y { get; set; }

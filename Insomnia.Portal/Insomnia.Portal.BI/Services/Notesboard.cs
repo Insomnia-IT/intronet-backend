@@ -23,13 +23,15 @@ namespace Insomnia.Portal.BI.Services
         {
         }
 
-        public async Task<NoteReturn> Add(CreateNote note)
+        public async Task<NoteReturn> Add(CreateNote note, string author)
         {
             try
             {
                 var entity = GetEntity(note);
                 if (entity == null)
                     return Error("Не удалось создать запись!");
+
+                entity.CreatedBy = author;
 
                 await _context.AddAsync(entity);
                 await _context.SaveChangesAsync();
@@ -43,13 +45,16 @@ namespace Insomnia.Portal.BI.Services
             }
         }
 
-        public async Task<NoteReturn> Edit(EditNote note)
+        public async Task<NoteReturn> Edit(EditNote note, string author)
         {
             try
             {
                 var entity = await GetEntityAsync(note.Id);
                 if (entity == null)
                     return NotFound("Запись с указанным ID не найдена!");
+
+                if (author != "admin" && entity.CreatedBy != author)
+                    return Error("Нельзя менять чужую запись!");
 
                 entity = _mapper.Map(note, entity);
 
@@ -64,7 +69,7 @@ namespace Insomnia.Portal.BI.Services
             }
         }
 
-        public async Task<NoteReturn> Delete(int id)
+        public async Task<NoteReturn> Delete(int id, string author)
         {
             try
             {
@@ -72,6 +77,9 @@ namespace Insomnia.Portal.BI.Services
 
                 if (entity is null)
                     return NotFound("Запись не найдена!");
+
+                if (author != "admin" && entity.CreatedBy != author)
+                    return Error("Нельзя удалить чужую запись!");
 
                 _context.Remove(entity);
                 await _context.SaveChangesAsync();

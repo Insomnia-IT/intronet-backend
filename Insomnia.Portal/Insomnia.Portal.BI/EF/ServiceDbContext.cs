@@ -22,6 +22,8 @@ namespace Insomnia.Portal.EF
         public DbSet<HistoryElementtable> HistoryElements { get; set; }
         public DbSet<Cash> Cash { get; set; }
 
+        public DbSet<Page> Pages { get; set; }
+
         public ServiceDbContext(DbContextOptions<ServiceDbContext> option) : base(option)
         {
            // Database.EnsureDeleted();
@@ -85,20 +87,6 @@ namespace Insomnia.Portal.EF
                     {
                         case EntityState.Added:
                             attach.Guid = Guid.NewGuid();
-                            break;
-                    }
-                }
-                if (entry.Entity is Elementtable elementtable)
-                {
-                    switch (entry.State)
-                    {
-                        case EntityState.Modified:
-                            newHistory = new HistoryElementtable()
-                            {
-                                CreatedDateTimeOldValue = utcNow,
-                                OldValue = elementtable.Time.ToString("t"),
-                                TimetableId = elementtable.Id,
-                            };
                             break;
                     }
                 }

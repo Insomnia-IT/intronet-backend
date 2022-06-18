@@ -10,6 +10,10 @@ namespace Insomnia.Portal.Data.Entity
     {
         public int Number { get; set; }
 
+        public int TimetableId { get; set; }
+
+        public Timetable Timetable { get; set; }
+
         public virtual List<Elementtable> Elements { get; set; }
     }
 }

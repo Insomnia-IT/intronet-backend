@@ -11,13 +11,19 @@ using System.Threading.Tasks;
 using Insomnia.Portal.Data.ViewModels.Input;
 using Insomnia.Portal.Data.Dto;
 using Insomnia.Portal.BI.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Insomnia.Portal.Data.Attributes;
+using Insomnia.Portal.BI.Options;
+using Insomnia.Portal.Data.Generic;
 
 namespace Insomnia.Portal.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[Controller]")]
     public class AdminController : BaseController
     {
+        private readonly AuthConfig _config;
         private readonly ILogger<AdminController> _logger;
         private readonly IMapper _mapper;
         private readonly IAdminLocation _location;
@@ -27,9 +33,10 @@ namespace Insomnia.Portal.API.Controllers
         private readonly IAdminNotesCategories _notescategories;
         private readonly IAdminDirection _direction;
         private readonly IAdminLocationMenu _locationMenu;
+        private readonly IAdminBlog _blog;
 
         public AdminController(ILogger<AdminController> logger, IMapper mapper,
-            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction, IAdminLocationMenu locationMenu)
+            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction, IAdminLocationMenu locationMenu, AuthConfig config, IAdminBlog blog)
         {
             _logger = logger;
             _mapper = mapper;
@@ -40,10 +47,26 @@ namespace Insomnia.Portal.API.Controllers
             _notescategories = notescategories;
             _direction = direction;
             _locationMenu = locationMenu;
+            _config = config;
+            _blog = blog;
+        }
+
+        [AllowAnonymous]
+        [HttpGet("auth")]
+        public async Task<IActionResult> Auth([FromQuery] string token)
+        {
+            if (token == _config.AdminToken || token == _config.PoteryashkiToken)
+            {
+                HttpContext.Response.Cookies.Append(ResourcesNaming.HeaderToken, token);
+                return Ok();
+            }
+
+            return Unauthorized();
         }
 
         #region Locations
 
+        [User("admin")]
         [HttpPost("locations/add")]
         public async Task<IActionResult> AddLocation([FromBody] CreateLocation model)
         {
@@ -59,6 +82,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpPut("locations/edit")]
         public async Task<IActionResult> EditLocation([FromBody] EditLocation model)
         {
@@ -81,6 +105,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpDelete("locations/delete/{id}")]
         public async Task<IActionResult> DeleteLocation(int id)
         {
@@ -96,6 +121,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpPut("locations/menu/edit")]
         public async Task<IActionResult> EditLocationMenu([FromBody] EditMenu model)
         {
@@ -115,6 +141,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpDelete("locations/menu/delete/{id}")]
         public async Task<IActionResult> DeleteLocationMenu(int id)
         {
@@ -134,6 +161,7 @@ namespace Insomnia.Portal.API.Controllers
 
         #region Location tags
 
+        [User("admin")]
         [HttpPost("tags/add")]
         public async Task<IActionResult> AddTag([FromBody] CreateTag model)
         {
@@ -149,6 +177,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpPut("tags/edit")]
         public async Task<IActionResult> EditTag([FromBody] EditTag model)
         {
@@ -170,6 +199,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpDelete("tags/delete/{id}")]
         public async Task<IActionResult> DeleteTag(int id)
         {
@@ -189,6 +219,7 @@ namespace Insomnia.Portal.API.Controllers
 
         #region Location directions
 
+        [User("admin")]
         [HttpPost("directions/add")]
         public async Task<IActionResult> AddDirection([FromForm] CreateDirection model)
         {
@@ -204,6 +235,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpPut("directions/edit")]
         public async Task<IActionResult> EditDirection([FromForm] EditDirection model)
         {
@@ -225,6 +257,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpDelete("directions/delete/{id}")]
         public async Task<IActionResult> DeleteDirection(int id)
         {
@@ -249,7 +282,8 @@ namespace Insomnia.Portal.API.Controllers
         {
             try
             {
-                var result = await _notesboard.Add(model);
+                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderToken] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderToken];
+                var result = await _notesboard.Add(model, userName);
 
                 return Result(result);
             }
@@ -270,7 +304,12 @@ namespace Insomnia.Portal.API.Controllers
 
             try
             {
-                var result = await _notesboard.Edit(model);
+                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderToken] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderToken];
+
+                if (userName == _config.AdminToken)
+                    userName = "admin";
+
+                var result = await _notesboard.Edit(model, userName);
 
                 return Result(result);
             }
@@ -285,7 +324,12 @@ namespace Insomnia.Portal.API.Controllers
         {
             try
             {
-                var result = await _notesboard.Delete(id);
+                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderToken] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderToken];
+
+                if (userName == _config.AdminToken)
+                    userName = "admin";
+
+                var result = await _notesboard.Delete(id, userName);
 
                 return Result(result);
             }
@@ -299,6 +343,7 @@ namespace Insomnia.Portal.API.Controllers
 
         #region Notes categories
 
+        [User("admin")]
         [HttpPost("notes/categories/add")]
         public async Task<IActionResult> AddNoteCategory([FromBody] CreateNoteCategory model)
         {
@@ -314,6 +359,7 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpPut("notes/categories/edit")]
         public async Task<IActionResult> EditNoteCategory([FromBody] EditNoteCategory model)
         {
@@ -335,12 +381,71 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        [User("admin")]
         [HttpDelete("notes/categories/delete/{id}")]
         public async Task<IActionResult> DeleteNoteCategory(int id)
         {
             try
             {
                 var result = await _notescategories.Delete(id);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Pages
+
+        [User("admin")]
+        [HttpPost("pages/add")]
+        public async Task<IActionResult> AddPage([FromBody] CreatePage model)
+        {
+            try
+            {
+                var result = await _blog.Add(model);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [User("admin")]
+        [HttpPut("pages/edit")]
+        public async Task<IActionResult> EditPage([FromBody] EditPage model)
+        {
+            if (model == null)
+                return BadRequest("Пустая модель запроса!");
+
+            if (model.Id <= 0)
+                return NotFound("Записи с ID = 0 не существует!");
+
+            try
+            {
+                var result = await _blog.Edit(model);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [User("admin")]
+        [HttpDelete("pages/delete/{id}")]
+        public async Task<IActionResult> DeletePage(int id)
+        {
+            try
+            {
+                var result = await _blog.Delete(id);
 
                 return Result(result);
             }
