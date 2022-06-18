@@ -23,42 +23,141 @@ namespace Insomnia.Portal.BI.Services
         {
         }
 
+        private async Task<Timetable> GetEntityAsync(int timetableId)
+        {
+            return await Timetables.SingleOrDefaultAsync(x => x.Id == timetableId);
+        }
+
         public async Task Add(TimetableDto schedule)
         {
 
         }
 
-        public async Task Edit(TimetableDto schedule)
+        public async Task<TimetableReturn> Edit(EditTimetable schedule)
         {
+            try
+            {
+                var entity = await GetEntityAsync(schedule.Id);
+                if (entity == null)
+                    return NotFound("Расписание с указанным ID не найдено!");
+
+                entity = _mapper.Map(schedule, entity);
+
+                entity.Audiences = await EditAudiences(schedule, entity.Audiences);
+
+                _context.Update(entity);
+                await _context.SaveChangesAsync();
+                return Ok<TimetableReturn>();
+            }
+            catch (Exception ex)
+            {
+                //добавить логгер
+                return Error(ex.Message);
+            }
         }
 
-        public async Task<ScheduleReturn> Get(int locationId)
+        private async Task<List<AudienceElement>> EditAudiences(EditTimetable schedule, List<AudienceElement> audiences)
         {
-            return null;
+            var result = new List<AudienceElement>();
+            foreach (var audience in audiences.Where(x => x.Id != 0))
+            {
+                var editAudience = GetAudienceElement(schedule, audience.Id);
+                if (editAudience is null)
+                    continue;
+
+                audience.Elements = await UpdateElementtables(editAudience, audience);
+                result.Add(audience);
+            }
+            foreach(var audience in audiences.Where(x => x.Id == 0))
+            {
+                var entity = _mapper.Map<AudienceElement>(audience);
+                //entity.Elements = await UpdateElementtables(entity, audience);
+                _context.Add(entity);
+                result.Add(entity);
+            }
+
+            return result;
         }
 
-        public async Task GetTimetable(int timetableId)
-        {
+        private EditAudienceElement GetAudienceElement(EditTimetable schedule, int audienceId) => schedule.Audiences.FirstOrDefault(x => x.Id == audienceId);
 
+        private async Task<List<Elementtable>> UpdateElementtables(EditAudienceElement editAudience, AudienceElement audience)
+        {
+            var result = new List<Elementtable>();
+            foreach(var element in audience.Elements.Where(x => x.Id != 0))
+            {
+                var editElement = GetElementtable(editAudience, element.Id);
+                if (editElement is null)
+                    continue;
+
+                if (editElement.IsDeleted)
+                {
+                    _context.Remove(element);
+                    continue;
+                }
+
+                var entity = element;
+
+                entity.Name = String.IsNullOrEmpty(editElement.Name) ? entity.Name : editElement.Name;
+                entity.Description = String.IsNullOrEmpty(editElement.Description) ? entity.Description : editElement.Description;
+
+                if (!String.IsNullOrEmpty(editElement.Time))
+                {
+                    entity.History.Add(await UpdatePropertyElementtable(element.Id, PropertyElementHistory.Time, entity.Time));
+
+                    entity.Time = editElement.Time;
+                }
+                if (!String.IsNullOrEmpty(editElement.Speaker))
+                {
+                    entity.History.Add(await UpdatePropertyElementtable(element.Id, PropertyElementHistory.Speaker, entity.Speaker));
+
+                    entity.Speaker = editElement.Speaker;
+                }
+                if (editElement.IsCanceled.HasValue)
+                {
+                    entity.History.Add(await UpdatePropertyElementtable(element.Id, PropertyElementHistory.Canseled, entity.IsCanceled));
+
+                    entity.IsCanceled = editElement.IsCanceled.Value;
+                }
+
+                result.Add(entity);
+            }
+            foreach(var newElement in editAudience.Elementtables.Where(x => x.Id == 0))
+            {
+                var entity = _mapper.Map<Elementtable>(newElement);
+                _context.Add(entity);
+                result.Add(entity);
+            }
+
+            audience.Elements = result;
+
+            await _context.SaveChangesAsync();
+
+            return result;
         }
 
-        public async Task GetTimetablesForLocation(int timetableId)
-        {
+        private EditElementtable GetElementtable(EditAudienceElement audience, int id) => audience.Elementtables.FirstOrDefault(x => x.Id == id);
 
+        public async Task<HistoryElementtable> UpdatePropertyElementtable(int elementTableId, PropertyElementHistory type, object oldValue)
+        {
+            var newHistory = new HistoryElementtable() { ElementtableId = elementTableId, Type = type, OldValue = oldValue.ToString() };
+            _context.Add(newHistory);
+            await _context.SaveChangesAsync();
+
+            return newHistory;
         }
 
-        private TagReturn Ok(Timetable timetable) => Ok(timetable.ToDto<TimetableDto>(_mapper).ToReturn<TagReturn>());
+        private TimetableReturn Ok(Timetable timetable) => Ok(timetable.ToDto<TimetableDto>(_mapper).ToReturn<TimetableReturn>());
 
-        private TagReturn Error(string errorMessage) => base.Error<TagReturn>(errorMessage);
+        private TimetableReturn Error(string errorMessage) => base.Error<TimetableReturn>(errorMessage);
 
-        private TagsReturn Ok(IList<Data.Entity.Tag> tag) => Ok(tag.ToDto<IList<TagDto>>(_mapper).ToReturn<TagsReturn>());
+        private TimetableReturn NotFound(string errorMessage) => base.Error<TimetableReturn>(errorMessage, CodeRequest.NotFound);
 
-        private TagsReturn Errors(string errorMessage) => base.Error<TagsReturn>(errorMessage);
+        public Task<ScheduleReturn> Get(int locationId)
+        {
+            throw new NotImplementedException();
+        }
 
-        private TagReturn NotFound(string errorMessage) => base.Error<TagReturn>(errorMessage, CodeRequest.NotFound);
-
-        private TagsReturn NotFoundArray(string errorMessage) => base.Error<TagsReturn>(errorMessage, CodeRequest.NotFound);
-
-        private IQueryable<Data.Entity.Tag> Tags => _context.Tags;
+        private IQueryable<Timetable> Timetables => _context.Timetables.Include(x => x.Audiences).ThenInclude(x => x.Elements).ThenInclude(x => x.History);
     }
 }

@@ -8,16 +8,20 @@ namespace Insomnia.Portal.Data.Entity
 {
     public class Elementtable : Base2
     {
+        public string Name { get; set; }
+
         public string Description { get; set; }
 
-        public DateTime Time { get; set; }
+        public string Time { get; set; }
 
         public string Speaker { get; set; }
 
-        public Timetable Timetable { get; set; }
+        public int AudienceId { get; set; }
+
+        public AudienceElement Audience { get; set; }
 
         public virtual List<HistoryElementtable> History { get; set; }
 
-        public bool IsCanceled { get; set; }
+        public bool IsCanceled { get; set; } = false;
     }
 }

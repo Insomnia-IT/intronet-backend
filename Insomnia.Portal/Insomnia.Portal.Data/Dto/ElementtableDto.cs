@@ -10,7 +10,7 @@ namespace Insomnia.Portal.Data.Dto
     {
         public string Description { get; set; }
 
-        public DateTime Time { get; set; }
+        public string Time { get; set; }
 
         public string Speaker { get; set; }
 

@@ -88,20 +88,6 @@ namespace Insomnia.Portal.EF
                             break;
                     }
                 }
-                if (entry.Entity is Elementtable elementtable)
-                {
-                    switch (entry.State)
-                    {
-                        case EntityState.Modified:
-                            newHistory = new HistoryElementtable()
-                            {
-                                CreatedDateTimeOldValue = utcNow,
-                                OldValue = elementtable.Time.ToString("t"),
-                                TimetableId = elementtable.Id,
-                            };
-                            break;
-                    }
-                }
             }
             if(!nameType.IsEmptyOrNull())
                 UpdateCash(nameType);

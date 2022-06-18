@@ -8,9 +8,11 @@ namespace Insomnia.Portal.Data.ViewModels.Input
 {
     public class CreateElementtable
     {
+        public string Name { get; set; }
+
         public string Description { get; set; }
 
-        public DateTime Time { get; set; }
+        public string Time { get; set; }
 
         public string Speaker { get; set; }
     }

@@ -46,5 +46,21 @@ namespace Insomnia.Portal.General.Expansions
 
             return list;
         }
+
+        /// <summary>
+        /// Вернёт второе перечисление если первое = null. Если второе = null, вернёт null. Иначе, вернёт разницу.
+        /// </summary>
+        /// <param name="enumerable1"></param>
+        /// <param name="enumerable2"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> ExpectOrNull<T>(this IEnumerable<T> enumerable1, IEnumerable<T> enumerable2)
+        {
+            if(enumerable1.IsEmptyOrNull())
+                return enumerable2;
+            if (enumerable2.IsEmptyOrNull())
+                return null;
+
+            return enumerable1.Except(enumerable2);
+        }
     }
 }
