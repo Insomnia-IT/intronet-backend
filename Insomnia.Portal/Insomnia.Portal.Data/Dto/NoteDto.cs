@@ -16,6 +16,8 @@ namespace Insomnia.Portal.Data.Dto
 
         public int CategoryId { get; set; }
 
+        public string CreatedDate { get; set; }
+
         public string CreatedBy { get; set; }
     }
 }
