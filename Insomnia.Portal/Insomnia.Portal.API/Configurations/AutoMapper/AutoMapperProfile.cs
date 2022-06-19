@@ -28,21 +28,21 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
                 .ForMember(x => x.X, opt => opt.Condition(src => src.X > 0))
                 .ForMember(x => x.Y, opt => opt.Condition(src => src.Y > 0))
                 .ForMember(x => x.DirectionId, opt => opt.Condition(src => src.DirectionId > 0))
-                .ForMember(x => x.Name, opt => opt.Condition(src => String.IsNullOrEmpty(src.Name) && src.Name != "string"))
-                .ForMember(x => x.Description, opt => opt.Condition(src => String.IsNullOrEmpty(src.Description) && src.Description != "string"));
+                .ForMember(x => x.Name, opt => opt.Condition(src => !String.IsNullOrEmpty(src.Name) && src.Name != "string"))
+                .ForMember(x => x.Description, opt => opt.Condition(src => !String.IsNullOrEmpty(src.Description) && src.Description != "string"));
 
             CreateMap<EditElementtable, Elementtable>()
                 .ForMember(x => x.Time, s => s.Ignore())
                 .ForMember(x => x.Name, s => s.Ignore())
                 .ForMember(x => x.Speaker, s => s.Ignore())
-                .ForMember(x => x.Description, s => s.Condition(src => String.IsNullOrEmpty(src.Description) && src.Description != "string"))
+                .ForMember(x => x.Description, s => s.Condition(src => !String.IsNullOrEmpty(src.Description) && src.Description != "string"))
                 .ForMember(x => x.Audience, s => s.Ignore())
                 .ForMember(x => x.AudienceId, s => s.Ignore());
 
             CreateMap<EditTimetable, Timetable>()
                 .ForMember(x => x.Audiences, s => s.Ignore())
                 .ForMember(x => x.Day, s => s.Condition(src => src.Day.HasValue))
-                .ForMember(x => x.Name, s => s.Condition(src => String.IsNullOrEmpty(src.Name) && src.Name != "string"))
+                .ForMember(x => x.Name, s => s.Condition(src => !String.IsNullOrEmpty(src.Name) && src.Name != "string"))
                 .ForMember(x => x.LocationId, s => s.Ignore());
 
             CreateMap<LocationDto, Location>()
