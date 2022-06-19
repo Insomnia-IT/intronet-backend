@@ -13,11 +13,11 @@ namespace Insomnia.Portal.API.Authentication
 {
     public class InsomniaAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        private readonly AuthConfig _config;
+        private readonly AuthOptions _config;
 
         public InsomniaAuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
-            ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, AuthConfig config
+            ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, AuthOptions config
             )
                 : base(options, logger, encoder, clock)
         {

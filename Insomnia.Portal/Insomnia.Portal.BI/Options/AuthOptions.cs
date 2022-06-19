@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Insomnia.Portal.BI.Options
 {
-    public class AuthConfig
+    public class AuthOptions
     {
         public string AdminToken { get; set; }
 

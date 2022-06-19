@@ -23,7 +23,7 @@ namespace Insomnia.Portal.API.Controllers
     [Route("api/[Controller]")]
     public class AdminController : BaseController
     {
-        private readonly AuthConfig _config;
+        private readonly AuthOptions _config;
         private readonly ILogger<AdminController> _logger;
         private readonly IMapper _mapper;
         private readonly IAdminLocation _location;
@@ -36,7 +36,7 @@ namespace Insomnia.Portal.API.Controllers
         private readonly IAdminBlog _blog;
 
         public AdminController(ILogger<AdminController> logger, IMapper mapper,
-            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction, IAdminLocationMenu locationMenu, AuthConfig config, IAdminBlog blog)
+            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction, IAdminLocationMenu locationMenu, AuthOptions config, IAdminBlog blog)
         {
             _logger = logger;
             _mapper = mapper;
