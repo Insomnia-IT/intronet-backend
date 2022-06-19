@@ -55,9 +55,16 @@ namespace Insomnia.Portal.API.Controllers
         [HttpGet("auth")]
         public async Task<IActionResult> Auth([FromQuery] string token)
         {
-            if (token == _config.AdminToken || token == _config.PoteryashkiToken)
+            if (token == _config.AdminToken)
             {
                 HttpContext.Response.Cookies.Append(ResourcesNaming.HeaderToken, token);
+                HttpContext.Response.Cookies.Append(ResourcesNaming.HeaderUserName, "admin");
+                return Ok();
+            }
+            if(token == _config.PoteryashkiToken)
+            {
+                HttpContext.Response.Cookies.Append(ResourcesNaming.HeaderToken, token);
+                HttpContext.Response.Cookies.Append(ResourcesNaming.HeaderUserName, "poteryashki");
                 return Ok();
             }
 
@@ -282,7 +289,7 @@ namespace Insomnia.Portal.API.Controllers
         {
             try
             {
-                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderToken] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderToken];
+                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderUserName] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderUserName];
                 var result = await _notesboard.Add(model, userName);
 
                 return Result(result);
@@ -304,10 +311,7 @@ namespace Insomnia.Portal.API.Controllers
 
             try
             {
-                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderToken] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderToken];
-
-                if (userName == _config.AdminToken)
-                    userName = "admin";
+                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderUserName] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderUserName];
 
                 var result = await _notesboard.Edit(model, userName);
 
@@ -324,10 +328,7 @@ namespace Insomnia.Portal.API.Controllers
         {
             try
             {
-                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderToken] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderToken];
-
-                if (userName == _config.AdminToken)
-                    userName = "admin";
+                string userName = HttpContext.Request.Cookies[ResourcesNaming.HeaderUserName] ?? HttpContext.Request.Headers[ResourcesNaming.HeaderUserName];
 
                 var result = await _notesboard.Delete(id, userName);
 

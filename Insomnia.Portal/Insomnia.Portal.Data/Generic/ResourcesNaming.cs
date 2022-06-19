@@ -9,5 +9,6 @@ namespace Insomnia.Portal.Data.Generic
     public class ResourcesNaming
     {
         public const string HeaderToken = "Token";
+        public const string HeaderUserName = "UserName";
     }
 }
