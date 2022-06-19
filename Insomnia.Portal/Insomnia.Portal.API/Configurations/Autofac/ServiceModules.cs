@@ -86,6 +86,8 @@ namespace Insomnia.Portal.API.Configurations.Autofac
             var resolver = new EnvironmentJsonResolver<Config>("appsettings.json", $"appsettings.{env}.json");
             var module = new ConfigurationModule(resolver);
 
+            Console.WriteLine($"конфиг {resolver.JsonFilename} загрузился!");
+
             builder.RegisterModule(module);
         }
     }
