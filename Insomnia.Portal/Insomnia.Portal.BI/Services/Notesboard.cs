@@ -36,7 +36,7 @@ namespace Insomnia.Portal.BI.Services
                 await _context.AddAsync(entity);
                 await _context.SaveChangesAsync();
 
-                return Ok<NoteReturn>();
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -60,7 +60,7 @@ namespace Insomnia.Portal.BI.Services
 
                 _context.Update(entity);
                 await _context.SaveChangesAsync();
-                return Ok<NoteReturn>();
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -84,7 +84,7 @@ namespace Insomnia.Portal.BI.Services
                 _context.Remove(entity);
                 await _context.SaveChangesAsync();
 
-                return Ok<NoteReturn>();
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -127,6 +127,8 @@ namespace Insomnia.Portal.BI.Services
 
             return Ok(notes);
         }
+
+        private NoteReturn Ok() => Ok<NoteReturn>();
 
         private NoteReturn Ok(Note tag) => Ok(tag.ToDto<NoteDto>(_mapper).ToReturn<NoteReturn>());
 

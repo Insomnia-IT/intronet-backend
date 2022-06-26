@@ -23,6 +23,26 @@ namespace Insomnia.Portal.BI.Services
         {
         }
 
+        public async Task<PageReturn> Get(int id)
+        {
+            var page = await Pages.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (page is null)
+                return NotFound("Страница не найдена!");
+
+            return Ok(page);
+        }
+
+        public async Task<PagesReturn> GetAll()
+        {
+            var pages = await Pages.OrderByDescending(x => x.Id).ToListAsync();
+
+            if (pages.IsEmptyOrNull())
+                return NotFoundArray("Список страниц пуст!");
+
+            return Ok(pages);
+        }
+
         public async Task<PageReturn> Add(CreatePage page)
         {
             try
@@ -91,21 +111,17 @@ namespace Insomnia.Portal.BI.Services
             return await Pages.SingleOrDefaultAsync(x => x.Id == pageId);
         }
 
-        private PageReturn Ok() => base.Ok<PageReturn>();
+        private PageReturn Ok() => Ok<PageReturn>();
+
+        private PageReturn Ok(Page page) => Ok(page.ToDto<PageDto>(_mapper).ToReturn<PageReturn>());
+
+        private PagesReturn Ok(IList<Page> pages) => Ok(pages.ToDto<IList<PageDto>>(_mapper).ToReturn<PagesReturn>());
 
         private PageReturn Error(string errorMessage) => base.Error<PageReturn>(errorMessage);
 
         private PageReturn NotFound(string errorMessage) => base.Error<PageReturn>(errorMessage, CodeRequest.NotFound);
 
-        public Task<PageReturn> Get(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagesReturn> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+        private PagesReturn NotFoundArray(string errorMessage) => base.Error<PagesReturn>(errorMessage, CodeRequest.NotFound);
 
         private IQueryable<Page> Pages => _context.Pages;
 
