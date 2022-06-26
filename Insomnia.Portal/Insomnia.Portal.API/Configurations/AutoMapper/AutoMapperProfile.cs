@@ -101,6 +101,10 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
             CreateMap<CreateElementtable, Elementtable>();
 
             CreateMap<EditAudienceElement, AudienceElement>();
+
+            CreateMap<CreatePage, Page>();
+
+            CreateMap<EditPage, Page>();
         }
     }
 }
