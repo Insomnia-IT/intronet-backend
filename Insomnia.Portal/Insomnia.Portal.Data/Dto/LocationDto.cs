@@ -22,6 +22,10 @@ namespace Insomnia.Portal.Data.Dto
 
         public string Image { get; set; }
 
+        public int DirectionId { get; set; }
+
+        public Direction Direction { get; set; }
+
         public TagDto[] Tags { get; set; }
 
         public string Menu { get; set; }
