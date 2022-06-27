@@ -13,6 +13,6 @@ namespace Insomnia.Portal.Data.ViewModels.Input
 
         public bool? IsCanceled { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
     }
 }

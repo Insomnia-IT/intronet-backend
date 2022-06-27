@@ -42,7 +42,6 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
             CreateMap<EditTimetable, Timetable>()
                 .ForMember(x => x.Audiences, s => s.Ignore())
                 .ForMember(x => x.Day, s => s.Condition(src => src.Day.HasValue))
-                .ForMember(x => x.Name, s => s.Condition(src => !String.IsNullOrEmpty(src.Name) && src.Name != "string"))
                 .ForMember(x => x.LocationId, s => s.Ignore());
 
             CreateMap<LocationDto, Location>()
@@ -101,6 +100,12 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
             CreateMap<CreateElementtable, Elementtable>();
 
             CreateMap<EditAudienceElement, AudienceElement>();
+
+            CreateMap<Timetable, TimetableDto>();
+
+            CreateMap<AudienceElement, AudienceElementDto>();
+
+            CreateMap<Elementtable, ElementtableDto>();
 
             CreateMap<CreatePage, Page>();
 

@@ -9,8 +9,6 @@ namespace Insomnia.Portal.Data.Entity
 {
     public class Timetable : Base
     {
-        public string Name { get; set; }
-
         public int LocationId { get; set; }
 
         public Location Location { get; set; }

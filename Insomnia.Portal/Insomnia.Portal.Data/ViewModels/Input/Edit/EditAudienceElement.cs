@@ -11,6 +11,8 @@ namespace Insomnia.Portal.Data.ViewModels.Input
     {
         public int Id { get; set; }
 
-        public new List<EditElementtable> Elementtables { get; set; }
+        public bool? IsDeleted { get; set; } = false;
+
+        public new List<EditElementtable> Elements { get; set; }
     }
 }

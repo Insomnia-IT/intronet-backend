@@ -128,6 +128,10 @@ namespace Insomnia.Portal.API.Controllers
             }
         }
 
+        #endregion
+
+        #region Location menu
+
         [User("admin")]
         [HttpPut("locations/menu/edit")]
         public async Task<IActionResult> EditLocationMenu([FromBody] EditMenu model)
@@ -271,6 +275,42 @@ namespace Insomnia.Portal.API.Controllers
             try
             {
                 var result = await _direction.Delete(id);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Location timetables
+
+        [User("admin")]
+        [HttpPost("locations/schedule/add-or-edit")]
+        public async Task<IActionResult> AddLocationTimetable([FromBody] EditTimetable model)
+        {
+            try
+            {
+                var result = await _schedule.AddOrEdit(model);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [User("admin")]
+        [HttpDelete("locations/menu/schedule/{id}")]
+        public async Task<IActionResult> DeleteLocationTimetable(int id)
+        {
+            try
+            {
+                var result = await _schedule.Delete(id);
 
                 return Result(result);
             }

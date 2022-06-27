@@ -13,6 +13,9 @@ namespace Insomnia.Portal.Data.ViewModels.Input
         [Required]
         public int Id { get; set; }
 
+        [Required]
+        public new int LocationId { get; set; }
+
         public new Day? Day { get; set; }
 
         public new List<EditAudienceElement> Audiences { get; set; }

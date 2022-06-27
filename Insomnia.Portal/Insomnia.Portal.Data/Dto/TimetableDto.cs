@@ -9,9 +9,9 @@ namespace Insomnia.Portal.Data.Dto
 {
     public class TimetableDto
     {
-        public int LocationId { get; set; }
+        public int Id { get; set; }
 
-        public List<AudienceElementDto> AuditoryElements { get; set; }
+        public List<AudienceElementDto> Audiences { get; set; }
 
         public Day Day { get; set; }
     }

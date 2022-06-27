@@ -10,6 +10,6 @@ namespace Insomnia.Portal.Data.ViewModels.Input
     {
         public int Number { get; set; }
 
-        public List<CreateElementtable> Elementtables { get; set; }
+        public List<CreateElementtable> Elements { get; set; }
     }
 }

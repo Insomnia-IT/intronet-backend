@@ -8,6 +8,8 @@ namespace Insomnia.Portal.Data.Dto
 {
     public class AudienceElementDto
     {
+        public int Id { get; set; }
+
         public int Number { get; set; }
 
         public IList<ElementtableDto> Elements { get; set; }
