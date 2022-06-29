@@ -12,6 +12,8 @@ namespace Insomnia.Portal.Data.Dto
     {
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public double X { get; set; }
 
         public double Y { get; set; }
@@ -19,8 +21,6 @@ namespace Insomnia.Portal.Data.Dto
         public double Lat { get; set; }
 
         public double Lon { get; set; }
-
-        public string Image { get; set; }
 
         public int DirectionId { get; set; }
 

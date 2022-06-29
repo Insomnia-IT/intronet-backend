@@ -305,7 +305,7 @@ namespace Insomnia.Portal.API.Controllers
         }
 
         [User("admin")]
-        [HttpDelete("locations/menu/schedule/{id}")]
+        [HttpDelete("locations/schedule/{id}")]
         public async Task<IActionResult> DeleteLocationTimetable(int id)
         {
             try
