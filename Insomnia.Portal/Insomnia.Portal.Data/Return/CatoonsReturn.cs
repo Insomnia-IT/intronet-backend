@@ -7,16 +7,16 @@ using Insomnia.Portal.Data.Dto;
 
 namespace Insomnia.Portal.Data.Return
 {
-    public class ReturnCartoonsSchedule : BaseReturn
+    public class CartoonsReturn : BaseReturn
     {
-        public ReturnCartoonsSchedule() : base()
-        { }
+        public CartoonsReturn() { }
 
-        public ReturnCartoonsSchedule(IList<CartoonsScheduleDto> model)
+        public CartoonsReturn(IList<AnimationTimetable> model)
         {
             Model = model;
         }
 
-        public new IList<CartoonsScheduleDto> Model { get; set; }
+        public new IList<AnimationTimetable> Model { get; set; }
     }
 }
+

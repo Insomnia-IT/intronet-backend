@@ -23,6 +23,10 @@ namespace Insomnia.Portal.Data.Enums
         /// <summary>
         /// Воскресенье
         /// </summary>
-        Sunday
+        Sunday,
+        /// <summary>
+        /// Понедельник
+        /// </summary>
+        Monday,
     }
 }

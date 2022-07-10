@@ -9,30 +9,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Insomnia.Portal.BI.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace Insomnia.Portal.API.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class СartoonsController : BaseController
+    public class ImportController : BaseController
     {
         private readonly ILogger<СartoonsController> _logger;
         private readonly IMapper _mapper;
-        private readonly ICartoons _сartoons;
+        private readonly IAnimationImport _animation;
 
-        public СartoonsController(ILogger<СartoonsController> logger, IMapper mapper, ICartoons сartoons)
+        public ImportController(ILogger<СartoonsController> logger, IMapper mapper, IAnimationImport animation)
         {
             _logger = logger;
             _mapper = mapper;
-            _сartoons = сartoons;
+            _animation = animation;
         }
 
-        [HttpGet("schedule")]
-        public async Task<IActionResult> Get()
+        [HttpPost("schedule-animations")]
+        public async Task<IActionResult> ScheduleAnimations([FromForm] Excel file)
         {
-            var schedule = await _сartoons.GetAll();
+            var schedule = _animation.GetAnimations(file.File.OpenReadStream());
 
-            return Result(schedule);
+            return Ok(schedule);
         }
+    }
+
+    public class Excel
+    {
+        public IFormFile File { get; set; }
     }
 }

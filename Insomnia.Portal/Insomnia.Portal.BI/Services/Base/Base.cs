@@ -58,6 +58,11 @@ namespace Insomnia.Portal.BI.Services
             return errorModel;
         }
 
+        public TEntity GetEntities<T>(T dto)
+        {
+            return _mapper.Map<T, TEntity>(dto);
+        }
+
         public TEntity GetEntity<T>(T dto)
         {
             return _mapper.Map<TEntity>(dto);

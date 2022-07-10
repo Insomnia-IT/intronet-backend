@@ -10,9 +10,5 @@ namespace Insomnia.Portal.Data.ViewModels.Input
     public class CreateDirection
     {
         public string Name { get; set; }
-
-        public string Image { get; set; }
-
-        public IFormFile File { get; set; }
     }
 }

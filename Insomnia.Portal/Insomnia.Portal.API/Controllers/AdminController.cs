@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Authorization;
 using Insomnia.Portal.Data.Attributes;
 using Insomnia.Portal.BI.Options;
 using Insomnia.Portal.Data.Generic;
+using Microsoft.AspNetCore.Http;
+using Insomnia.Portal.Data.ViewModels.Input.Create;
 
 namespace Insomnia.Portal.API.Controllers
 {
@@ -34,9 +36,10 @@ namespace Insomnia.Portal.API.Controllers
         private readonly IAdminDirection _direction;
         private readonly IAdminLocationMenu _locationMenu;
         private readonly IAdminBlog _blog;
+        private readonly IAdminCartoons _cartoons;
 
         public AdminController(ILogger<AdminController> logger, IMapper mapper,
-            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction, IAdminLocationMenu locationMenu, AuthOptions config, IAdminBlog blog)
+            IAdminLocation location, IAdminTag tag, IAdminNotesboard notesboard, IAdminSchedule schedule, IAdminNotesCategories notescategories, IAdminDirection direction, IAdminLocationMenu locationMenu, AuthOptions config, IAdminBlog blog, IAdminCartoons cartoons)
         {
             _logger = logger;
             _mapper = mapper;
@@ -49,6 +52,7 @@ namespace Insomnia.Portal.API.Controllers
             _locationMenu = locationMenu;
             _config = config;
             _blog = blog;
+            _cartoons = cartoons;
         }
 
         [AllowAnonymous]
@@ -487,6 +491,27 @@ namespace Insomnia.Portal.API.Controllers
             try
             {
                 var result = await _blog.Delete(id);
+
+                return Result(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Catroons
+
+        [User("admin")]
+        [HttpPost("cartoons/import")]
+        public async Task<IActionResult> ImportCartoons([FromForm] File file)
+        {
+            try
+            {
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                var result = await _cartoons.Add(file.Get.OpenReadStream());
 
                 return Result(result);
             }

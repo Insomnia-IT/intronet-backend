@@ -115,12 +115,10 @@ namespace Insomnia.Portal.BI.Services
             {
                 Id = directionId,
                 Name = directionId.ToString(),
-                Image = StaticValues.DefaultImageForLocationDirection,
             } :
             new Direction()
             {
                 Name = directionId.ToString(),
-                Image = StaticValues.DefaultImageForLocationDirection,
             };
 
         public async Task<DirectionReturn> Add(CreateDirection direction)

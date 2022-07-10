@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Insomnia.Portal.Data.Return;
+using Insomnia.Portal.Data.Entity;
+using System.IO;
 
 namespace Insomnia.Portal.BI.Interfaces
 {
-    public interface ICartoons
+    public interface IAdminCartoons
     {
-        Task<CartoonsReturn> GetAll();
+        Task<BaseReturn> Add(Stream stream);
     }
 }

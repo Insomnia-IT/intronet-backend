@@ -76,11 +76,9 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
             CreateMap<NoteCategory, NoteCategoryDto>()
                 .ForMember(x => x.Count, s => s.MapFrom(x => x.Notes == null ? 0 : x.Notes.Count));
 
-            CreateMap<CreateDirection, Direction>()
-                .ForMember(x => x.Image, s => s.MapFrom<FormatterDirectionToCreateOrEditDirection>());
+            CreateMap<CreateDirection, Direction>();
 
-            CreateMap<EditDirection, Direction>()
-                .ForMember(x => x.Image, s => s.MapFrom<FormatterDirectionToCreateOrEditDirection>());
+            CreateMap<EditDirection, Direction>();
 
             CreateMap<DirectionDto, Direction>()
                 .ReverseMap();
@@ -112,6 +110,21 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
             CreateMap<EditPage, Page>();
 
             CreateMap<Page, PageDto>();
+
+            CreateMap<Data.Dto.MovieInfo, Data.Entity.MovieInfo>()
+                .ReverseMap();
+
+            CreateMap<Data.Dto.DayInfo, Data.Entity.DayInfo>()
+                .ReverseMap();
+
+            CreateMap<Data.Dto.BlockInfo, Data.Entity.BlockInfo>()
+                .ReverseMap();
+
+            CreateMap<Data.Dto.AnimationBlock, Data.Entity.AnimationBlock>()
+                .ReverseMap();
+
+            CreateMap<Data.Dto.AnimationTimetable, Data.Entity.AnimationTimetable>()
+                .ReverseMap();
         }
     }
 }

@@ -6,38 +6,46 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ExcelDataReader;
+using Insomnia.Portal.BI.Interfaces;
+using Insomnia.Portal.Data.Dto;
+using Insomnia.Portal.Data.Enums;
+using Insomnia.Portal.General.Expansions;
+using Insomnia.Portal.EF;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Insomnia.Portal.BI.Services
 {
-    public class AnimationParser
+    public class AnimationParser : IAnimationImport
     {
-        private readonly string _filePath;
-
-        public AnimationParser(string filePath)
+        public AnimationParser()
         {
-            _filePath = filePath;
         }
 
-        private DataSet GetFileContent()
+        private DataSet GetFileContent(Stream file)
         {
-            using var stream = File.Open(_filePath, FileMode.Open, FileAccess.Read);
-            // Auto-detect format, supports:
-            //  - Binary Excel files (2.0-2003 format; *.xls)
-            //  - OpenXml Excel files (2007 format; *.xlsx, *.xlsb)
-            using var reader = ExcelReaderFactory.CreateReader(stream);
-            // Choose one of either 1 or 2:
-            // 2. Use the AsDataSet extension method
-            return reader.AsDataSet();
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                ms.Position = 0;
+                using (var reader = ExcelReaderFactory.CreateReader(ms))
+                {
+                    return reader.AsDataSet();
+                }
+            }
         }
 
-        public IReadOnlyList<AnimationTimetable> GetAnimations()
+        public async Task<List<AnimationTimetable>> GetAnimations(Stream stream)
         {
-            var dataset = GetFileContent();
-            return new[]
+            var dataset = GetFileContent(stream);
+            var result = new[]
             {
                 dataset.Tables["ЦУЭ 1"],
                 dataset.Tables["ЦУЭ 2"],
             }.SelectMany(ParseSheet).Select(Convert).ToList();
+
+            return result;
         }
 
         private AnimationTimetable Convert(DayInfo dayInfo)
@@ -45,7 +53,7 @@ namespace Insomnia.Portal.BI.Services
             return new AnimationTimetable
             {
                 Screen = dayInfo.Screen,
-                Day = DateTime.Parse(dayInfo.Date),
+                Day = DateTime.Parse(dayInfo.Date).DayOfWeek.MappingDay(),
                 Blocks = dayInfo.Blocks.Select(Convert).ToList() 
             };
         } 
@@ -124,7 +132,7 @@ namespace Insomnia.Portal.BI.Services
                             arr.Add(null);
                         }
 
-                        var movie = new MovieInfo(arr[0], arr[1], arr[2], arr[3], arr[4]);
+                        var movie = new MovieInfo(arr[0]?.Trim(), arr[1]?.Trim(), arr[2]?.Trim(), arr[3]?.Trim(), arr[4]?.Trim());
                         blockInfo.Movies.Add(movie);
                     }
 
@@ -134,40 +142,5 @@ namespace Insomnia.Portal.BI.Services
 
             return dayColums.Values;
         }
-
-        private record DayInfo(string Date, string Screen, List<BlockInfo> Blocks);
-
-        private record BlockInfo
-        {
-            public string Title { get; set; }
-            public string Start { get; set; }
-            public string End { get; set; }
-
-            public List<MovieInfo> Movies = new List<MovieInfo>();
-        }
     }
-
-    public class AnimationTimetable
-    {
-        public DateTime Day { get; set; }
-        public string Screen { get; set; }
-        public IReadOnlyList<AnimationBlock> Blocks { get; set; }
-    }
-
-    public class AnimationBlock
-    {
-        public string Title { get; set; }
-        public string SubTitle { get; set; }
-        public string TitleEn { get; set; }
-        public string SubTitleEn { get; set; }
-        public int MinAge { get; set; }
-        public int Part { get; set; }
-        public string Start { get; set; }
-        public string End { get; set; }
-
-        public IReadOnlyList<MovieInfo> Movies = new List<MovieInfo>();
-    }
-
-    public record MovieInfo(string Name = null, string Author = null, string Country = null, string Year = null,
-        string Duration = null);
 }

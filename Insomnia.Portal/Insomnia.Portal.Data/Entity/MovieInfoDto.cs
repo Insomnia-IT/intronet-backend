@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace Insomnia.Portal.Data.Entity
 {
-    public class Direction : BaseCashing
+    public class MovieInfo : Base
     {
         public string Name { get; set; }
 
-        public ICollection<Location> Locations { get; set; }
+        public string Author { get; set; }
+
+        public string Country { get; set; }
+
+        public string Year { get; set; }
+
+        public string Duration { get; set; }
     }
 }

@@ -28,7 +28,6 @@ namespace Insomnia.Portal.EF
             {
                 Id = StaticValues.DefaultIdForLocationDirection,
                 Name = StaticValues.DefaultNameForLocationDirection,
-                Image = StaticValues.DefaultImageForLocationDirection,
             };
 
             modelBuilder.Entity<Direction>().HasData(defaultDirection);

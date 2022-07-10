@@ -76,28 +76,4 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
             return direction;
         }
     }
-
-    public class FormatterDirectionToCreateOrEditDirection : IValueResolver<CreateDirection, Direction, string>
-    {
-        private readonly IAttachment _attachment;
-
-        public FormatterDirectionToCreateOrEditDirection(IAttachment attachment)
-        {
-            _attachment = attachment;
-        }
-
-        public string Resolve(CreateDirection source, Direction destination, string result, ResolutionContext context)
-        {
-            if(!String.IsNullOrEmpty(source.Image) && source.Image.IsUrl())
-                return source.Image;
-
-            if (source.File is not null && source.File.IsImage())
-                return Task.Run(async () => await _attachment.Upload(new CreateAttachment()
-                {
-                    File = source.File,
-                })).Result;
-
-            return StaticValues.DefaultImageForLocationDirection;
-        }
-    }
 }

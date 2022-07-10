@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Insomnia.Portal.Data.Enums;
 
 namespace Insomnia.Portal.General.Expansions
 {
@@ -27,5 +28,15 @@ namespace Insomnia.Portal.General.Expansions
 
             return expression(attribute);
         }
+
+        public static Day MappingDay(this DayOfWeek day) =>
+            day switch
+            {
+                DayOfWeek.Monday => Day.Monday,
+                DayOfWeek.Sunday => Day.Sunday,
+                DayOfWeek.Thursday => Day.Thursday,
+                DayOfWeek.Friday => Day.Friday,
+                DayOfWeek.Saturday => Day.Saturday,
+            };
     }
 }
