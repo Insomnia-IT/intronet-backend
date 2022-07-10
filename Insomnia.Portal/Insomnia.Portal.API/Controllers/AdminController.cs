@@ -75,6 +75,14 @@ namespace Insomnia.Portal.API.Controllers
             return Unauthorized();
         }
 
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Response.Cookies.Delete(ResourcesNaming.HeaderToken);
+            HttpContext.Response.Cookies.Delete(ResourcesNaming.HeaderUserName);
+            return Ok();
+        }
+
         #region Locations
 
         [User("admin")]
