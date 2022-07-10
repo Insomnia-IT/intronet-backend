@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Insomnia.Portal.General.Expansions
 {
@@ -47,6 +49,10 @@ namespace Insomnia.Portal.General.Expansions
             elements.All(x => x.CanParseToFloat());
 
         public static string[] ToArray(this string elements) => elements.Split(',');
+
+        public static T ToObject<T>(this string json) => JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        public async static Task<T> ToObject<T>(this Task<string> json) => JsonSerializer.Deserialize<T>(await json);
 
         public static bool IsUrl(this string url) => Uri.TryCreate(url, UriKind.Absolute, out Uri uriResult)
                 && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);

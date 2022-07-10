@@ -62,6 +62,12 @@ namespace Insomnia.Portal.API.Configurations.Autofac
             builder.RegisterType<AnimationParser>()
                 .As<IAnimationImport>();
 
+            builder.RegisterType<SendData>()
+                .As<ISender>();
+
+            builder.RegisterType<ImportService>()
+                .As<ILocationImport>();
+
             builder.RegisterType<FormatterTagToCreateOrEditLocation>();
 
             builder.RegisterType<FormatterCategoryToCreateOrEditNote>();
