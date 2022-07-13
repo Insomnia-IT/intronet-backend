@@ -43,6 +43,12 @@ namespace Insomnia.Portal.BI.Services
             return Tags.OrderByDescending(x => x.Id).Take(count).ToListOrNull();
         }
 
+        public async Task Clear()
+        {
+            _context.RemoveRange(_context.Tags);
+            await _context.SaveChangesAsync();
+        }
+
         public Tag Create(string tag)
         {
             var entity = GetTagEntityModel(tag);

@@ -185,7 +185,7 @@ namespace Insomnia.Portal.BI.Services
                 var e = _mapper.Map<Elementtable>(x);
                 e.IsCanceled = true;
                 e.AudienceId = entity.Id;
-                e.History.Add(await UpdatePropertyElementtable(e.Id, PropertyElementHistory.Canseled, false));
+                e.History.Add(UpdatePropertyElementtable(e.Id, PropertyElementHistory.Canseled, false));
                 return e;
             }).ToList();
 
@@ -212,7 +212,7 @@ namespace Insomnia.Portal.BI.Services
 
             foreach(var element in updateElements)
             {
-                var f = await EditElement(element, entity.Elements.SingleOrDefault(x => x.Id == element.Id));
+                var f = EditElement(element, entity.Elements.SingleOrDefault(x => x.Id == element.Id));
 
                 elements.Add(f);
             }
@@ -257,7 +257,7 @@ namespace Insomnia.Portal.BI.Services
             return _mapper.Map<Elementtable>(element);
         }
 
-        private async Task<Elementtable> EditElement(EditElementtable element, Elementtable entity)
+        private Elementtable EditElement(EditElementtable element, Elementtable entity)
         {
             if (entity == null)
                 return AddElement(element);
@@ -267,19 +267,19 @@ namespace Insomnia.Portal.BI.Services
 
             if (!String.IsNullOrEmpty(element.Time))
             {
-                entity.History.Add(await UpdatePropertyElementtable(element.Id, PropertyElementHistory.Time, entity.Time));
+                entity.History.Add(UpdatePropertyElementtable(element.Id, PropertyElementHistory.Time, entity.Time));
 
                 entity.Time = element.Time;
             }
             if (!String.IsNullOrEmpty(element.Speaker))
             {
-                entity.History.Add(await UpdatePropertyElementtable(element.Id, PropertyElementHistory.Speaker, entity.Speaker));
+                entity.History.Add(UpdatePropertyElementtable(element.Id, PropertyElementHistory.Speaker, entity.Speaker));
 
                 entity.Speaker = element.Speaker;
             }
             if (element.IsCanceled.HasValue)
             {
-                entity.History.Add(await UpdatePropertyElementtable(element.Id, PropertyElementHistory.Canseled, entity.IsCanceled));
+                entity.History.Add(UpdatePropertyElementtable(element.Id, PropertyElementHistory.Canseled, entity.IsCanceled));
 
                 entity.IsCanceled = element.IsCanceled.Value;
             }
@@ -287,7 +287,7 @@ namespace Insomnia.Portal.BI.Services
             return entity;
         }
 
-        public async Task<HistoryElementtable> UpdatePropertyElementtable(int elementTableId, PropertyElementHistory type, object oldValue)
+        public HistoryElementtable UpdatePropertyElementtable(int elementTableId, PropertyElementHistory type, object oldValue)
         {
             var newHistory = new HistoryElementtable() { ElementtableId = elementTableId, Type = type, OldValue = oldValue.ToString() };
 

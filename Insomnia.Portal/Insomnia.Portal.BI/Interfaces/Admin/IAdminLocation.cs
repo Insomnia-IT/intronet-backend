@@ -16,5 +16,7 @@ namespace Insomnia.Portal.BI.Interfaces
         Task<LocationReturn> Edit(EditLocation location);
 
         Task<LocationReturn> Delete(int id);
+
+        Task Clear();
     }
 }

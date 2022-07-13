@@ -38,10 +38,10 @@ namespace Insomnia.Portal.API.Controllers
             return Ok(schedule);
         }
 
-        [HttpPost("schedule-locationss")]
-        public async Task<IActionResult> ScheduleLocations([FromForm] Excel file)
+        [HttpGet("schedule-locationss")]
+        public async Task<IActionResult> ScheduleLocations()
         {
-            var schedule = _animation.GetAnimations(file.File.OpenReadStream());
+            var schedule = await _location.Locations();
 
             return Ok(schedule);
         }

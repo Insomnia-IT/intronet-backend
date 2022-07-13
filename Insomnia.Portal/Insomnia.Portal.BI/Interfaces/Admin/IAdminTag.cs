@@ -18,5 +18,7 @@ namespace Insomnia.Portal.BI.Interfaces
         Task<TagReturn> Edit(EditTag tag);
 
         Task<TagReturn> Delete(int id);
+
+        Task Clear();
     }
 }

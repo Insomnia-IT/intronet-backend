@@ -54,6 +54,12 @@ namespace Insomnia.Portal.BI.Services
             return Directions.OrderByDescending(x => x.Id).FirstOrDefault();
         }
 
+        public async Task Clear()
+        {
+            _context.RemoveRange(_context.Directions);
+            await _context.SaveChangesAsync();
+        }
+
         private int GetLastEntityId()
         {
             var direction = Directions.OrderByDescending(x => x.Id).FirstOrDefault();

@@ -17,5 +17,7 @@ namespace Insomnia.Portal.BI.Interfaces
         Task<DirectionReturn> Edit(EditDirection direction);
 
         Task<DirectionReturn> Delete(int id);
+
+        Task Clear();
     }
 }

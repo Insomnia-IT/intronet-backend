@@ -112,7 +112,11 @@ namespace Insomnia.Portal.BI.Services
         {
             var locations = await _sender.Get<List<MiniLocation>>("https://agreemod.insomniafest.ru/agreemod/Notion/locations".FixUrl());
 
-            locations.Add(new MiniLocation() { Name = "ws", ShortName = "Туалеты", Description = "Вы сами знаете что тут делать", Tags = new List<string>() { "Инфрастуктура", "С контентом", "Гигиена"} });
+            locations.Add(new MiniLocation() { Name = "ws", ShortName = "Туалеты", Description = "Вы сами знаете что тут делать", Tags = new List<string>() { "Инфрастуктура", "С контентом", "Гигиена", "Гостевая зона" } });
+
+            await _location.Clear();
+            await _tag.Clear();
+            await _direction.Clear();
 
             foreach (var location in locations.Where(x => x.Tags.Contains("Гостевая зона")))
             {
