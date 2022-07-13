@@ -252,7 +252,7 @@ namespace Insomnia.Portal.BI.Services
             await _context.SaveChangesAsync();
         }
 
-        private async Task<Elementtable> AddElement(EditElementtable element)
+        private Elementtable AddElement(EditElementtable element)
         {
             return _mapper.Map<Elementtable>(element);
         }
@@ -260,7 +260,7 @@ namespace Insomnia.Portal.BI.Services
         private async Task<Elementtable> EditElement(EditElementtable element, Elementtable entity)
         {
             if (entity == null)
-                return await AddElement(element);
+                return AddElement(element);
 
             entity.Name = String.IsNullOrEmpty(element.Name) ? entity.Name : element.Name;
             entity.Description = String.IsNullOrEmpty(element.Description) ? entity.Description : element.Description;

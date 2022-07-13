@@ -38,7 +38,7 @@ namespace Insomnia.Portal.BI.Services
                 await _context.AddAsync(entity);
                 await _context.SaveChangesAsync();
 
-                return Ok<LocationReturn>();
+                return Ok(await Locations.OrderByDescending(x => x.Id).FirstOrDefaultAsync());
             }
             catch (Exception ex)
             {
