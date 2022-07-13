@@ -212,7 +212,7 @@ namespace Insomnia.Portal.BI.Services
 
             foreach(var element in updateElements)
             {
-                var f = await EditElement(element, entity.Elements.SingleOrDefault(x => x.Id == element.Id);
+                var f = await EditElement(element, entity.Elements.SingleOrDefault(x => x.Id == element.Id));
 
                 elements.Add(f);
             }
