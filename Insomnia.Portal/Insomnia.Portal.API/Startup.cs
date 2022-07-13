@@ -38,8 +38,6 @@ namespace Insomnia.Portal.API
                .AddAuthentication("UserAuthenticationToken")
                .AddScheme<AuthenticationSchemeOptions, InsomniaAuthenticationHandler>("UserAuthenticationToken", null);
 
-
-
             services.AddOptions();
 
             services.AddCors(o => o.AddPolicy("AllowAll", builder =>
