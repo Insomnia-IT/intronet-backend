@@ -24,6 +24,16 @@ namespace Insomnia.Portal.BI.Services
         {
         }
 
+        public async Task<int> AddOrGetId(CreateDirection direction)
+        {
+            var entity = await Get(direction.Name);
+
+            if (!entity.Success)
+                return Create(direction.Name).Id;
+
+            return ((DirectionDto)((BaseReturn)entity).Model).Id;
+        }
+
         public IList<Direction> GetEntities(int[] directionsIds)
         {
             return Directions.Where(x => directionsIds.Contains(x.Id)).ToListOrNull();
@@ -44,12 +54,31 @@ namespace Insomnia.Portal.BI.Services
             return Directions.OrderByDescending(x => x.Id).FirstOrDefault();
         }
 
+        private int GetLastEntityId()
+        {
+            var direction = Directions.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            if (direction == null)
+                return 0;
+            return direction.Id;
+        }
+
         private IList<Direction> GetLastEntities(int count)
         {
             return Directions.OrderByDescending(x => x.Id).Take(count).ToListOrNull();
         }
 
         public Direction Create(int directionId)
+        {
+            var entity = GetDirectionEntityModel(directionId);
+
+            _context.Add(entity);
+            _context.SaveChanges();
+
+            return GetLastEntity();
+        }
+
+        public Direction Create(string directionId)
         {
             var entity = GetDirectionEntityModel(directionId);
 
@@ -78,6 +107,16 @@ namespace Insomnia.Portal.BI.Services
         public async Task<DirectionReturn> Get(int id)
         {
             var direction = await Directions.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (direction is null)
+                return NotFound("Направление не найдено!");
+
+            return Ok(direction);
+        }
+
+        public async Task<DirectionReturn> Get(string name)
+        {
+            var direction = await Directions.FirstOrDefaultAsync(x => x.Name == name);
 
             if (direction is null)
                 return NotFound("Направление не найдено!");
@@ -119,6 +158,12 @@ namespace Insomnia.Portal.BI.Services
             new Direction()
             {
                 Name = directionId.ToString(),
+            };
+
+        private Direction GetDirectionEntityModel(string direction) =>
+            new Direction()
+            {
+                Name = direction,
             };
 
         public async Task<DirectionReturn> Add(CreateDirection direction)

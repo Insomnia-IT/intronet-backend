@@ -20,18 +20,36 @@ namespace Insomnia.Portal.API.Controllers
         private readonly ILogger<СartoonsController> _logger;
         private readonly IMapper _mapper;
         private readonly IAnimationImport _animation;
+        private readonly ILocationImport _location;
 
-        public ImportController(ILogger<СartoonsController> logger, IMapper mapper, IAnimationImport animation)
+        public ImportController(ILogger<СartoonsController> logger, IMapper mapper, IAnimationImport animation, ILocationImport location)
         {
             _logger = logger;
             _mapper = mapper;
             _animation = animation;
+            _location = location;
         }
 
         [HttpPost("schedule-animations")]
         public async Task<IActionResult> ScheduleAnimations([FromForm] Excel file)
         {
             var schedule = _animation.GetAnimations(file.File.OpenReadStream());
+
+            return Ok(schedule);
+        }
+
+        [HttpPost("schedule-locations")]
+        public async Task<IActionResult> ScheduleLocations([FromForm] Excel file)
+        {
+            var schedule = _animation.GetAnimations(file.File.OpenReadStream());
+
+            return Ok(schedule);
+        }
+
+        [HttpPost("locations")]
+        public async Task<IActionResult> Locations()
+        {
+            var schedule = await _location.Locations();
 
             return Ok(schedule);
         }

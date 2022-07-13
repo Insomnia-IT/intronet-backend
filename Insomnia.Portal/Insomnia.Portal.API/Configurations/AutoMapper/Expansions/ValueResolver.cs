@@ -31,7 +31,7 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
             if (source.Tags.IsEmptyOrNull())
                 return location.Tags ?? new List<Tag>();
 
-            var tags = _tag.GetEntitiesOrCreating(source.Tags);
+            var tags = _tag.GetEntitiesOrCreating(source.Tags.ToArray());
 
             return tags;
         }

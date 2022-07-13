@@ -9,7 +9,7 @@ using Insomnia.Portal.Data.Filters;
 
 namespace Insomnia.Portal.General.Expansions
 {
-    public static class FiltersExpanstions
+    public static class FiltersExpansions
     {
         public static async Task<IList<Location>> FilterToList(this IQueryable<Location> locations, LocationsFilter filter)
         {

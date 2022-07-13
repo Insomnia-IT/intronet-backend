@@ -43,6 +43,16 @@ namespace Insomnia.Portal.BI.Services
             return Tags.OrderByDescending(x => x.Id).Take(count).ToListOrNull();
         }
 
+        public Tag Create(string tag)
+        {
+            var entity = GetTagEntityModel(tag);
+
+            _context.Add(entity);
+            _context.SaveChanges();
+
+            return GetLastEntity();
+        }
+
         public Tag Create(int tag)
         {
             var entity = GetTagEntityModel(tag);
@@ -79,6 +89,27 @@ namespace Insomnia.Portal.BI.Services
             return Ok(tag);
         }
 
+        public async Task<TagReturn> Get(string name)
+        {
+            var tag = await Tags.FirstOrDefaultAsync(x => x.Name == name);
+
+            if (tag is null)
+                return NotFound("Тэг не найден!");
+
+            return Ok(tag);
+        }
+
+        public async Task<int> AddOrGetId(CreateTag tag)
+        {
+            var entity = await Get(tag.Name);
+
+            if (!entity.Success)
+                return Create(tag.Name).Id;
+
+            return ((TagDto)((BaseReturn)entity).Model).Id;
+        }
+
+
         public async Task<TagsReturn> GetAll()
         {
             var tags = await Tags.ToListAsync();
@@ -113,6 +144,12 @@ namespace Insomnia.Portal.BI.Services
             new Tag()
             {
                 Name = tag.ToString(),
+            };
+
+        private Tag GetTagEntityModel(string tag) => 
+            new Tag()
+            {
+                Name = tag
             };
 
         public async Task<TagReturn> Add(CreateTag tag)

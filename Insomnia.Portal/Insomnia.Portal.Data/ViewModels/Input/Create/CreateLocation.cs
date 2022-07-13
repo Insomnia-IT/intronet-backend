@@ -23,6 +23,6 @@ namespace Insomnia.Portal.Data.ViewModels.Input
 
         public int DirectionId { get; set; }
 
-        public int[] Tags { get; set; }
+        public List<int> Tags { get; set; }
     }
 }

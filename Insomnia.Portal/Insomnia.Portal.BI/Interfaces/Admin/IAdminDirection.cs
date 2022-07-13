@@ -10,9 +10,11 @@ namespace Insomnia.Portal.BI.Interfaces
 {
     public interface IAdminDirection
     {
-        Task<DirectionReturn> Add(CreateDirection directionId);
+        Task<int> AddOrGetId(CreateDirection direction);
 
-        Task<DirectionReturn> Edit(EditDirection directionId);
+        Task<DirectionReturn> Add(CreateDirection direction);
+
+        Task<DirectionReturn> Edit(EditDirection direction);
 
         Task<DirectionReturn> Delete(int id);
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Insomnia.Portal.Data.Return;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace Insomnia.Portal.BI.Interfaces
 {
     public interface ILocationImport
     {
+        Task<ImportReturn> Locations();
     }
 }
