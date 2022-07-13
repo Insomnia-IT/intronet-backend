@@ -128,7 +128,7 @@ namespace Insomnia.Portal.BI.Services
 
                 var direction = location.GetDirection();
                 newLocation.DirectionId = await _direction.AddOrGetId(new CreateDirection() { Name = direction });
-                +
+                
                 foreach (var newL in localCords.Where(x => x.Item1 == location.Name))
                 {
                     newLocation.Lat = double.Parse(newL.Item2.Split(", ")[0].Replace('.',','));

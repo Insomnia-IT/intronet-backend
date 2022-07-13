@@ -49,7 +49,7 @@ namespace Insomnia.Portal.BI.Services
                 await _context.AddAsync(entity);
                 await _context.SaveChangesAsync();
 
-                return Ok<TimetableReturn>();
+                return Ok(await Timetables.OrderByDescending(x => x.Id).FirstOrDefaultAsync());
             }
             catch (Exception ex)
             {
@@ -92,10 +92,10 @@ namespace Insomnia.Portal.BI.Services
                 await _context.SaveChangesAsync();
 
                 var timetableId = entity.Id > 0 ? entity.Id : Timetables.OrderByDescending(x => x.Id).First().Id;
-
+                        
                 await AddOrEditAudiencies(schedule.Audiences, entity.Audiences, timetableId);
 
-                return Ok<TimetableReturn>();
+                return Ok(await Timetables.OrderByDescending(x => x.Id).FirstOrDefaultAsync());
             }
             catch(Exception ex)
             {
