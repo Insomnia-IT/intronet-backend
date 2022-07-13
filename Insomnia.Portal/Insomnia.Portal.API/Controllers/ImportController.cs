@@ -46,7 +46,7 @@ namespace Insomnia.Portal.API.Controllers
             return Ok(schedule);
         }
 
-        [HttpPost("locations")]
+        [HttpGet("locations")]
         public async Task<IActionResult> Locations()
         {
             var schedule = await _location.Locations();
