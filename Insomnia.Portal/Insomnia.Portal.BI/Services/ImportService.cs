@@ -120,9 +120,8 @@ namespace Insomnia.Portal.BI.Services
 
             foreach (var location in locations.Where(x => x.Tags.Contains("Гостевая зона")))
             {
-                var newLocation = new CreateLocation() { Tags = new List<int>() };
+                var newLocation = new CreateLocation() { Tags = new List<int>(), Name = String.IsNullOrEmpty(location.ShortName) ? location.Name : location.ShortName, Description = location.Description };
                 
-
                 foreach (var tag in location.GetTags())
                 {
                     var tagId = await _tag.AddOrGetId(new CreateTag() { Name = tag });
