@@ -27,7 +27,7 @@ namespace Insomnia.Portal.API.Controllers
         [HttpGet("alive")]
         public async Task<IActionResult> Alive()
         {
-            return Ok("I BELIVE I CAN FLY!");
+            return Ok("I BELIVE Idddddddddd CAN FLY!");
         }
     }
 }
