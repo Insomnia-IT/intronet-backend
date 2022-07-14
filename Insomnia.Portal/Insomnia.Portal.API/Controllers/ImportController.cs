@@ -21,13 +21,15 @@ namespace Insomnia.Portal.API.Controllers
         private readonly IMapper _mapper;
         private readonly IAnimationImport _animation;
         private readonly ILocationImport _location;
+        private readonly ITimetableImport _timetable;
 
-        public ImportController(ILogger<СartoonsController> logger, IMapper mapper, IAnimationImport animation, ILocationImport location)
+        public ImportController(ILogger<СartoonsController> logger, IMapper mapper, IAnimationImport animation, ILocationImport location, ITimetableImport timetable)
         {
             _logger = logger;
             _mapper = mapper;
             _animation = animation;
             _location = location;
+            _timetable = timetable;
         }
 
         [HttpPost("schedule-animations")]
@@ -38,10 +40,10 @@ namespace Insomnia.Portal.API.Controllers
             return Ok(schedule);
         }
 
-        [HttpGet("schedule-locationss")]
+        [HttpGet("schedule-locations")]
         public async Task<IActionResult> ScheduleLocations()
         {
-            var schedule = await _location.Locations();
+            var schedule = await _timetable.Timetables();
 
             return Ok(schedule);
         }

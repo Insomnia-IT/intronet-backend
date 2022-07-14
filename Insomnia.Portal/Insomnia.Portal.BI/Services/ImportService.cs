@@ -146,6 +146,8 @@ namespace Insomnia.Portal.BI.Services
 
         public async Task<ImportReturn> Timetables()
         {
+            var timetables = await _sender.Get<List<CreateTimetable>>("https://agreemod.insomniafest.ru/agreemod/Notion/schedules".FixUrl());
+
             return null;
         }
     }
