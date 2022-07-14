@@ -43,6 +43,7 @@ namespace Insomnia.Portal.BI.Services
             {
                 dataset.Tables["ЦУЭ 1"],
                 dataset.Tables["ЦУЭ 2"],
+                dataset.Tables["Детский Экран"]
             }.SelectMany(ParseSheet).Select(Convert).ToList();
 
             return result;

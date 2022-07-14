@@ -52,21 +52,20 @@ namespace Insomnia.Portal.BI.Services
             ("Экран “Детский” + ЦУЭ", "54.68039, 35.07801"),
             ("Лаборатория (лаборатория + админка)", "54.67605, 35.09372"),
             ("Витражи (сцена/кафе+ админка)", "54.68196, 35.09177"),
-            ("Карусель “Заря” (карусель/кафе + лагерь)", "54.67712, 35.09612"),
+            ("Карусель \"Заря\" (карусель/кафе + лагерь)", "54.67712, 35.09612"),
             ("Диафильминариум (пространство-кинозал + лагерь)", "54.68226, 35.07651"),
-            ("Экран “Речной” + ЦУЭ", "54.678, 35.08335"),
-            ("Экран “Речной” + ЦУЭ", "54.67825, 35.08351"),
+            ("Экран \"Речной\" + ЦУЭ", "54.678, 35.08335"),
             ("Накрывашка “Психологическая беседка”", "54.6781, 35.08353"),
             ("Накрывашка “Территория тела”", "54.67816, 35.08332"),
             ("Хедлайнер", "54.67936, 35.08131"),
             ("VR-шатер", "54.67953, 35.09097"),
             ("Шатер анимации", "54.67737, 35.08832"),
-            ("Кафе “Guzzler Bird” (кафе+ админка)", "54.67843, 35.08147"),
+            ("Кафе \"Guzzler Bird\" (кафе+ админка)", "54.67843, 35.08147"),
             ("Катавасия", "54.67741, 35.08514"),
             ("Кафе \"Ragnarock\"", "54.6776, 35.08431"),
             ("Кафе “Ништя4ная”(кафе+ лагерь)", "54.67629, 35.09146"),
             ("Детское кафе “Глаз да глаз”", "54.6805, 35.07729"),
-            ("Кафе “Эль-Стейко” (кафе+ лагерь)", "54.67715, 35.08622"),
+            ("Кафе \"Эль-Стейко\" (кафе+ лагерь)", "54.67715, 35.08622"),
             ("Кинобар (кафе+ лагерь)", "54.68311, 35.09461"),
             ("Фудкорт (фудкорт с бэкстейджем + лагерь фудкортников)", "54.67857, 35.09037"),
             ("Автокемпинг", "54.68188, 35.09013"),
@@ -112,7 +111,9 @@ namespace Insomnia.Portal.BI.Services
         {
             var locations = await _sender.Get<List<MiniLocation>>("https://agreemod.insomniafest.ru/agreemod/Notion/locations".FixUrl());
 
-            locations.Add(new MiniLocation() { Name = "ws", ShortName = "Туалеты", Description = "Вы сами знаете что тут делать", Tags = new List<string>() { "Инфрастуктура", "С контентом", "Гигиена", "Гостевая зона" } });
+            var errors = new List<string>();
+
+            locations.Add(new MiniLocation() { Name = "wc", ShortName = "Туалеты", Description = "Вы сами знаете что тут делать", Tags = new List<string>() { "Инфрастуктура", "С контентом", "Гигиена", "Гостевая зона" } });
 
             await _location.Clear();
             await _tag.Clear();
@@ -134,10 +135,13 @@ namespace Insomnia.Portal.BI.Services
                 
                 foreach (var newL in localCords.Where(x => x.Item1 == location.Name))
                 {
-                    newLocation.Lat = double.Parse(newL.Item2.Split(", ")[0]);
-                    newLocation.Lon = double.Parse(newL.Item2.Split(", ")[1]);
+                    newLocation.Lat = double.Parse(newL.Item2.Split(", ")[0].Replace('.',','));
+                    newLocation.Lon = double.Parse(newL.Item2.Split(", ")[1].Replace('.', ','));
 
-                    await _location.Add(newLocation);
+                    var d = await _location.Add(newLocation);
+
+                    if (!d.Success)
+                        errors.Add(d.Message);
                 }
             }
 

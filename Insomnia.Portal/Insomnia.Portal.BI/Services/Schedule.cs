@@ -54,7 +54,7 @@ namespace Insomnia.Portal.BI.Services
             catch (Exception ex)
             {
                 //добавить логгер
-                return Error(ex.Message);
+                return Error("ОШИБКА: " + GetMessage(ex));
             }
         }
 
@@ -99,7 +99,6 @@ namespace Insomnia.Portal.BI.Services
             }
             catch(Exception ex)
             {
-                
                 return Error("ОШИБКА: " + GetMessage(ex));
             }
         }
