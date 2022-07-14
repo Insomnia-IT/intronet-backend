@@ -52,7 +52,7 @@ namespace Insomnia.Portal.General.Expansions
                 return "Лекторий";
             if (location.ShortName == "Экран Полевой" || location.ShortName == "Экран Речной")
                 return "Экран";
-            if (location.Directions.Any(x => ArtDirections.Contains("Свадебная локация")))
+            if (location.Directions.Any(x => ArtDirections.Contains(x)))
                 return "Арт-объект";
             if (location.Directions.Contains("КПП-1") || location.Directions.Contains("КПП-2"))
                 return "КПП";
