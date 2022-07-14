@@ -44,8 +44,8 @@ namespace Insomnia.Portal.General.Expansions
         {
             if (location.Directions == null)
                 return String.Empty;
-            if (location.Directions.Count == 1)
-                return location.Directions[0];
+            if (location.Name == "Кафе-библиотека “Locus Solus”" || location.Name == "Кафе-библиотека \"Locus Solus\"")
+                return "locus";
             if (location.Directions.Contains("Еда на фестивале"))
                 return "Кафе";
             if (location.Directions.Any(x => Lektorii.Contains(x)))
@@ -60,6 +60,9 @@ namespace Insomnia.Portal.General.Expansions
                 return "Костёр";
             if (Lagerya.Contains(location.Name))
                 return "Платный лагерь";
+            if (location.Directions.Count == 1)
+                return location.Directions[0];
+
 
             return null;
         }
