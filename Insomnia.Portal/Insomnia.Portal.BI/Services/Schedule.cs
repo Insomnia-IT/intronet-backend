@@ -185,7 +185,7 @@ namespace Insomnia.Portal.BI.Services
 
             var newElements = audience.Elements.Where(x => x.IsDeleted != true).Where(x => x.Id == 0).ToList();
 
-            var canseledElements = audience.Elements.Where(x => x.IsDeleted != true).Where(x => !entityElementsIds.Contains(x.Id)).Select(async x =>
+            var canseledElements = audience.Elements.Where(x => x.IsDeleted != true).Where(x => !entityElementsIds.Contains(x.Id)).Select(x =>
             {
                 var e = _mapper.Map<Elementtable>(x);
                 e.IsCanceled = true;
