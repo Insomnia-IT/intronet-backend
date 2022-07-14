@@ -100,7 +100,7 @@ namespace Insomnia.Portal.BI.Services
             catch(Exception ex)
             {
                 
-                return Error(GetMessage(ex));
+                return Error("ОШИБКА: " + GetMessage(ex));
             }
         }
 
