@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Insomnia.Portal.API.Controllers
 {
     [ApiController]
-    [Route("")]
+    [Route("xcvxvxvcxv")]
     public class ExampleController : BaseController
     {
         private readonly ILogger<ExampleController> _logger;
