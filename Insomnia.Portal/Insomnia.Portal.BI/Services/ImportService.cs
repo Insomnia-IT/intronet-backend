@@ -143,8 +143,8 @@ namespace Insomnia.Portal.BI.Services
                 
                 foreach (var newL in localCords.Where(x => x.Item1 == location.Name))
                 {
-                    newLocation.Lat = double.Parse(newL.Item2.Split(", ")[0].Replace('.',','));
-                    newLocation.Lon = double.Parse(newL.Item2.Split(", ")[1].Replace('.', ','));
+                    newLocation.Lat = double.Parse(newL.Item2.Split(", ")[0]);
+                    newLocation.Lon = double.Parse(newL.Item2.Split(", ")[1]);
 
                     var d = await _location.Add(newLocation);
 
