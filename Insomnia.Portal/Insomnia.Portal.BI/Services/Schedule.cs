@@ -99,8 +99,14 @@ namespace Insomnia.Portal.BI.Services
             }
             catch(Exception ex)
             {
-                return Error(ex.Message);
+                
+                return Error(GetMessage(ex));
             }
+        }
+
+        private string GetMessage(Exception ex)
+        {
+            return ex.InnerException != null ? ex.Message + " " + GetMessage(ex.InnerException) : ex.Message;
         }
 
         private async Task<List<EditAudienceElement>> RepareAudience(List<EditAudienceElement> audiences)
