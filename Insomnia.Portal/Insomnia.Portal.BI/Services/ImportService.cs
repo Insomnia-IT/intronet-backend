@@ -10,6 +10,8 @@ using Insomnia.Portal.Data.Dto;
 using Insomnia.Portal.Data.Return;
 using Insomnia.Portal.General.Expansions;
 using Insomnia.Portal.Data.ViewModels.Input;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Insomnia.Portal.BI.Services
 {
@@ -150,7 +152,9 @@ namespace Insomnia.Portal.BI.Services
 
         public async Task<ImportReturn> Timetables()
         {
-            var timetables = await _sender.Get<List<CreateTimetable>>("https://agreemod.insomniafest.ru/agreemod/Notion/schedules".FixUrl());
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new JsonStringEnumConverter());
+            var timetables = await _sender.Get<List<CreateTimetable>>("http://agreemod-dev.insomniafest.ru/agreemod/Notion/schedules".FixUrl());
 
             return null;
         }

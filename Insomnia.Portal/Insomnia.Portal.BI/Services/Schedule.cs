@@ -218,11 +218,11 @@ namespace Insomnia.Portal.BI.Services
             foreach(var element in updateElements)
             {
                 var f = EditElement(element, entity.Elements.SingleOrDefault(x => x.Id == element.Id));
-
+                _context.Update(f);
                 elements.Add(f);
             }
 
-            entity.Elements = elements;
+            entity.Elements = null;
             _context.Update(entity);
             await _context.SaveChangesAsync();
         }

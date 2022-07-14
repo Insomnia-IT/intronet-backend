@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -50,7 +51,12 @@ namespace Insomnia.Portal.General.Expansions
 
         public static string[] ToArray(this string elements) => elements.Split(',');
 
-        public static T ToObject<T>(this string json) => JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        public static T ToObject<T>(this string json)
+        {
+            var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+            options.Converters.Add(new JsonStringEnumConverter());
+            return JsonSerializer.Deserialize<T>(json, options);
+        }
 
         public async static Task<T> ToObject<T>(this Task<string> json) => JsonSerializer.Deserialize<T>(await json);
 
