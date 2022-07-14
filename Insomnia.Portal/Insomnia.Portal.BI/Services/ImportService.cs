@@ -12,6 +12,7 @@ using Insomnia.Portal.General.Expansions;
 using Insomnia.Portal.Data.ViewModels.Input;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AutoMapper;
 
 namespace Insomnia.Portal.BI.Services
 {
@@ -20,8 +21,11 @@ namespace Insomnia.Portal.BI.Services
         private readonly ServiceDbContext _context;
         private readonly ISender _sender;
         private readonly IAdminLocation _location;
+        private readonly IAdminSchedule _schedule;
         private readonly IAdminTag _tag;
         private readonly IAdminDirection _direction;
+        private readonly IMapper _mapper;
+
         private (string, string)[] localCords = new[]
         {
             ("Инфоцентр", "54.67846, 35.08835"),
@@ -100,13 +104,15 @@ namespace Insomnia.Portal.BI.Services
             ("wc", "54.68403, 35.08332"),
         };
 
-        public ImportService(ServiceDbContext context, ISender sender, IAdminLocation location, IAdminTag tag, IAdminDirection direction)
+        public ImportService(ServiceDbContext context, ISender sender, IAdminLocation location, IAdminTag tag, IAdminDirection direction, IMapper mapper, IAdminSchedule schedule)
         {
             _context = context;
             _sender = sender;
             _location = location;
             _tag = tag;
             _direction = direction;
+            _mapper = mapper;
+            _schedule = schedule;
         }
 
         public async Task<ImportReturn> Locations()
@@ -154,7 +160,13 @@ namespace Insomnia.Portal.BI.Services
         {
             var options = new JsonSerializerOptions();
             options.Converters.Add(new JsonStringEnumConverter());
-            var timetables = await _sender.Get<List<CreateTimetable>>("http://agreemod-dev.insomniafest.ru/agreemod/Notion/schedules".FixUrl());
+            var timetables = await _sender.Get<List<CreateTimetableJson>>("http://agreemod-dev.insomniafest.ru/agreemod/Notion/schedules".FixUrl());
+
+            foreach (var timetable in timetables.Select(x => _mapper.Map<EditTimetable>(x)))
+            {
+                if(timetable.LocationId != 0)
+                    await _schedule.AddOrEdit(timetable);
+            }
 
             return null;
         }

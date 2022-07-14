@@ -45,7 +45,7 @@ namespace Insomnia.Portal.BI.Services
                 var entity = GetEntity(schedule);
                 if (entity == null)
                     return Error("Не удалось создать раписание!");
-
+                
                 await _context.AddAsync(entity);
                 await _context.SaveChangesAsync();
 

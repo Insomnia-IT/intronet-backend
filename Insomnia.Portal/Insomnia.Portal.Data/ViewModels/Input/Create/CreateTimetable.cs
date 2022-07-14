@@ -15,4 +15,13 @@ namespace Insomnia.Portal.Data.ViewModels.Input
 
         public Day Day { get; set; }
     }
+
+    public class CreateTimetableJson
+    {
+        public string Location { get; set; }
+
+        public List<CreateAudienceElement> Audiences { get; set; } = new List<CreateAudienceElement>();
+
+        public string Day { get; set; }
+    }
 }

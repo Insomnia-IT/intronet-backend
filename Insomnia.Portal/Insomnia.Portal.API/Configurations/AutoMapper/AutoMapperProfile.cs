@@ -93,6 +93,18 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
 
             CreateMap<CreateTimetable, Timetable>();
 
+            CreateMap<CreateTimetableJson, EditTimetable>()
+                .ForMember(x => x.LocationId, s => s.MapFrom<ImportLocationMapping>())
+                .ForMember(x => x.Id, s => s.Ignore())
+                .ForMember(x => x.Day, s => s.MapFrom(y => y.Day == "Четверг" ? Day.Thursday : y.Day == "Пятница" ? Day.Friday : y.Day == "Суббота" ? Day.Saturday : y.Day == "Воскерсенье" ? Day.Sunday : Day.Monday));
+
+
+            CreateMap<CreateAudienceElement, EditAudienceElement>()
+                .ForMember(x => x.Id, s => s.Ignore());
+
+            CreateMap<CreateElementtable, EditElementtable>()
+                .ForMember(x => x.Id, s => s.Ignore());
+
             CreateMap<CreateAudienceElement, AudienceElement>();
 
             CreateMap<CreateElementtable, Elementtable>();

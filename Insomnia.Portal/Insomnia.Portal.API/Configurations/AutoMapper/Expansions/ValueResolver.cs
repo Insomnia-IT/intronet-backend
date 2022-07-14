@@ -76,4 +76,25 @@ namespace Insomnia.Portal.API.Configurations.AutoMapper
             return direction;
         }
     }
+
+    public class ImportLocationMapping : IValueResolver<CreateTimetableJson, EditTimetable, int>
+    {
+        private readonly ILocation _location;
+
+        public ImportLocationMapping(ILocation location)
+        {
+            _location = location;
+        }
+
+        public int Resolve(CreateTimetableJson source, EditTimetable location, int result, ResolutionContext context)
+        {
+            var l = _location.GetEntity(source.Location);
+
+            if (l == null)
+                return 0;
+
+            return l.Id;
+        }
+    }
+
 }

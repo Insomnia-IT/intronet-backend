@@ -21,5 +21,7 @@ namespace Insomnia.Portal.BI.Interfaces
         Task<LocationsReturn> GetAllWithFilter(LocationsFilter filter);
 
         Task<LocationsReturn> GetAllFullWithFilter(LocationsFilter filter);
+
+        Data.Entity.Location GetEntity(string name);
     }
 }

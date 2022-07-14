@@ -167,6 +167,11 @@ namespace Insomnia.Portal.BI.Services
             await _context.SaveChangesAsync();
         }
 
+        public Data.Entity.Location GetEntity(string name)
+        {
+            return Locations.FirstOrDefault(x => x.Name == name);
+        }
+
         private IQueryable<Data.Entity.Location> Locations => _context.Locations.Include(x => x.Tags);
 
         private IQueryable<Data.Entity.Location> LocationsFull => _context.Locations

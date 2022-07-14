@@ -65,6 +65,8 @@ namespace Insomnia.Portal.API.Configurations.Autofac
             builder.RegisterType<SendData>()
                 .As<ISender>();
 
+            builder.RegisterType<ImportLocationMapping>();
+
             builder.RegisterType<ImportService>()
                 .As<ILocationImport>()
                 .As<ITimetableImport>();

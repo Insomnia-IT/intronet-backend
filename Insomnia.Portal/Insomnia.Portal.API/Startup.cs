@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Insomnia.Portal.API.Authentication;
+using System.Text.Json.Serialization;
 
 namespace Insomnia.Portal.API
 {
@@ -58,7 +59,10 @@ namespace Insomnia.Portal.API
 
             services.AddControllers()
                     .AddNewtonsoftJson(options =>
-                        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore).AddJsonOptions(opt =>
+                        {
+                            opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                        });
 
             services.AddSwaggerGen(c =>
                     c.AddServer(new Microsoft.OpenApi.Models.OpenApiServer()
