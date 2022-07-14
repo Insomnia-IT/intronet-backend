@@ -46,6 +46,8 @@ namespace Insomnia.Portal.General.Expansions
                 return String.Empty;
             if (location.ShortName == "Баня Steamology" || location.ShortName == "Баня братьев Лимонов")
                 return "Баня";
+            if (location.ShortName == "Туалет" || location.ShortName == "Туалеты")
+                return "Туалет";
             if (location.Name == "Кафе-библиотека “Locus Solus”" || location.Name == "Кафе-библиотека \"Locus Solus\"")
                 return "locus";
             if (location.Directions.Contains("Еда на фестивале"))
