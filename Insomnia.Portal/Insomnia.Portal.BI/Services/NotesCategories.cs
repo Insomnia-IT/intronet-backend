@@ -155,6 +155,7 @@ namespace Insomnia.Portal.BI.Services
                     return NotFound("Категория с указанным ID не найден!");
 
                 entity.Name = category.Name;
+                entity.Color = category.Color;
 
                 _context.Update(entity);
                 await _context.SaveChangesAsync();
