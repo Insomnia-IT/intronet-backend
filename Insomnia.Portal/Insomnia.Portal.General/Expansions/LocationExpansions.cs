@@ -50,13 +50,13 @@ namespace Insomnia.Portal.General.Expansions
                 return "Кафе";
             if (location.Directions.Any(x => Lektorii.Contains(x)))
                 return "Лекторий";
-            if (location.ShortName == "Экран Полевой" || location.ShortName == "Экран Речной")
+            if (location.ShortName == "Экран Полевой" || location.ShortName == "Экран Речной" || location.ShortName == "Экран Детский")
                 return "Экран";
             if (location.Directions.Any(x => ArtDirections.Contains(x)))
                 return "Арт-объект";
             if (location.Directions.Contains("КПП-1") || location.Directions.Contains("КПП-2"))
                 return "КПП";
-            if (location.Directions.Contains("Пожарная безопастность"))
+            if (location.Directions.Contains("Пожарная безопастность") || location.ShortName == "Большой костёр")
                 return "Костёр";
             if (Lagerya.Contains(location.Name))
                 return "Платный лагерь";
