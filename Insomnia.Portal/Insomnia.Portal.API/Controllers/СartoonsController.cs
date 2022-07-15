@@ -40,7 +40,7 @@ namespace Insomnia.Portal.API.Controllers
         {
             var schedule = await _сartoons.Get(id);
 
-            return Result(schedule);
+            return Ok(schedule);
         }
     }
 }
