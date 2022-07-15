@@ -14,13 +14,13 @@ namespace Insomnia.Portal.API.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class СartoonsController : BaseController
+    public class CartoonsController : BaseController
     {
-        private readonly ILogger<СartoonsController> _logger;
+        private readonly ILogger<CartoonsController> _logger;
         private readonly IMapper _mapper;
         private readonly ICartoons _сartoons;
 
-        public СartoonsController(ILogger<СartoonsController> logger, IMapper mapper, ICartoons сartoons)
+        public CartoonsController(ILogger<CartoonsController> logger, IMapper mapper, ICartoons сartoons)
         {
             _logger = logger;
             _mapper = mapper;

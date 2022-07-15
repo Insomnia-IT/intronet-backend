@@ -17,13 +17,13 @@ namespace Insomnia.Portal.API.Controllers
     [Route("api/[Controller]")]
     public class ImportController : BaseController
     {
-        private readonly ILogger<СartoonsController> _logger;
+        private readonly ILogger<ImportController> _logger;
         private readonly IMapper _mapper;
         private readonly IAnimationImport _animation;
         private readonly ILocationImport _location;
         private readonly ITimetableImport _timetable;
 
-        public ImportController(ILogger<СartoonsController> logger, IMapper mapper, IAnimationImport animation, ILocationImport location, ITimetableImport timetable)
+        public ImportController(ILogger<ImportController> logger, IMapper mapper, IAnimationImport animation, ILocationImport location, ITimetableImport timetable)
         {
             _logger = logger;
             _mapper = mapper;
