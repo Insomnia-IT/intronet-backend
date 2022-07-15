@@ -30,7 +30,18 @@ namespace Insomnia.Portal.BI.Services
             if (animations.IsEmptyOrNull())
                 return NotFoundArray("Список анимаций пуст!");
 
-            return Ok(animations);
+            var model = _mapper.Map < List < Data.Entity.AnimationTimetable > , List <AnimationTimetable>>(animations);
+
+            foreach(var anim in model)
+            {
+                anim.LocationId = _context.Locations.FirstOrDefault(x => x.Name == GetNameLocation(anim.Screen)).Id;
+            }
+
+            return new CartoonsReturn()
+            {
+                Success = true,
+                Model = model
+            };
         }
 
         private string GetNameScreen(string locationName) =>
@@ -40,6 +51,14 @@ namespace Insomnia.Portal.BI.Services
                 "Экран Полевой" => "ЦУЭ 1",
                 "Экран Речной" => "ЦУЭ 2",
             };
+
+        private string GetNameLocation(string screenName) =>
+        screenName switch
+        {
+            "Детский Экран" => "Экран Детский",
+            "ЦУЭ 1" => "Экран Полевой",
+            "ЦУЭ 2" => "Экран Речной",
+        };
 
         public async Task<CartoonReturn> Get(int id)
         {
