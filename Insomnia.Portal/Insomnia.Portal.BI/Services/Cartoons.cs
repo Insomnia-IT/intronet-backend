@@ -107,19 +107,6 @@ namespace Insomnia.Portal.BI.Services
 
         private CartoonsReturn NotFoundArray(string errorMessage) => base.Error<CartoonsReturn>(errorMessage, Data.Enums.CodeRequest.NotFound);
 
-        private CartoonReturn Ok(Data.Entity.AnimationTimetable model, int locationId)
-        {
-            var m = _mapper.Map<Data.Dto.AnimationTimetable>(model);
-
-            m.LocationId = locationId;
-
-            return new CartoonReturn()
-            {
-                Model = m,
-                Success = true
-            };
-        }
-
         private CartoonReturn NotFound(string errorMessage) => base.Error<CartoonReturn>(errorMessage, Data.Enums.CodeRequest.NotFound);
 
         private CartoonReturn Error(string errorMessage) => base.Error<CartoonReturn>(errorMessage);
