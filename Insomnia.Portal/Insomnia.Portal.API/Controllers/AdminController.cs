@@ -512,7 +512,7 @@ namespace Insomnia.Portal.API.Controllers
 
         #region Catroons
 
-        [User("admin")]
+        [AllowAnonymous]
         [HttpPost("cartoons/import")]
         public async Task<IActionResult> ImportCartoons([FromForm] File file)
         {
