@@ -33,11 +33,19 @@ namespace Insomnia.Portal.BI.Services
             return Ok(animations);
         }
 
+        private string GetNameScreen(string locationName) =>
+            locationName switch
+            {
+                "Экран Детский" => "Детский Экран",
+                "Экран Полевой" => "ЦУЭ 1",
+                "Экран Речной" => "ЦУЭ 2",
+            };
+
         public async Task<CartoonReturn> Get(int id)
         {
             var location = await _context.Locations.FirstOrDefaultAsync(x => x.Id == id);
-
-            var animation = await Animations.FirstOrDefaultAsync(x => x.Screen == location.Name);
+            
+            var animation = await Animations.FirstOrDefaultAsync(x => x.Screen == GetNameScreen(location.Name));
 
             if (animation == null)
                 return NotFound("Список анимаций пуст!");
