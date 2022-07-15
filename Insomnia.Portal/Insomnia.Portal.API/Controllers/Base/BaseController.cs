@@ -16,11 +16,6 @@ namespace Insomnia.Portal.API.Controllers.Base
             Done = true
         });
 
-        internal new OkObjectResult Ok(object model) => base.Ok(new
-        {
-            Done = true,
-            Model = model
-        });
 
         internal new BadRequestObjectResult BadRequest() => base.BadRequest(new
         {
