@@ -40,7 +40,11 @@ namespace Insomnia.Portal.API.Controllers
         {
             var schedule = await _сartoons.Get(id);
 
-            return Ok(schedule);
+            return Ok(new
+            {
+                schedule.Success,
+                schedule.Model
+            });
         }
     }
 }
