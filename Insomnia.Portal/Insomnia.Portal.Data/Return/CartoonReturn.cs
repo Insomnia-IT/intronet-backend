@@ -11,11 +11,11 @@ namespace Insomnia.Portal.Data.Return
     {
         public CartoonReturn() { }
 
-        public CartoonReturn(AnimationTimetable model)
+        public CartoonReturn(List<AnimationTimetable> model)
         {
             Model = model;
         }
 
-        public new AnimationTimetable Model { get; set; }
+        public new List<AnimationTimetable> Model { get; set; }
     }
 }

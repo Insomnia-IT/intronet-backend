@@ -62,14 +62,15 @@ namespace Insomnia.Portal.BI.Services
 
         public async Task<CartoonReturn> Get(int id)
         {
-            var location = await _context.Locations.FirstOrDefaultAsync(x => x.Id == id);
-            
-            var animation = await Animations.FirstOrDefaultAsync(x => x.Screen == GetNameScreen(location.Name));
+            var catroons = (await GetAll());
+            if (!catroons.Success)
+                return Error("Не найдено");
 
-            if (animation == null)
-                return NotFound("Список анимаций пуст!");
-
-            return Ok(animation, location.Id);
+            return new CartoonReturn()
+            {
+                Success = true,
+                Model =  catroons.Model.Where(x => x.LocationId == id).ToList()
+            };
         }
 
         public async Task<BaseReturn> Add(Stream stream)
@@ -121,6 +122,6 @@ namespace Insomnia.Portal.BI.Services
 
         private CartoonReturn NotFound(string errorMessage) => base.Error<CartoonReturn>(errorMessage, Data.Enums.CodeRequest.NotFound);
 
-        private BaseReturn Error(string errorMessage) => base.Error<BaseReturn>(errorMessage);
+        private CartoonReturn Error(string errorMessage) => base.Error<CartoonReturn>(errorMessage);
     }
 }
