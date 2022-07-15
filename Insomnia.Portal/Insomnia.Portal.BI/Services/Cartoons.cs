@@ -75,6 +75,10 @@ namespace Insomnia.Portal.BI.Services
 
         public async Task<BaseReturn> Add(Stream stream)
         {
+
+            _context.RemoveRange(_context.Animations);
+            await _context.SaveChangesAsync();
+
             var animations = await _import.GetAnimations(stream);
 
             return await AddToBd(animations);
