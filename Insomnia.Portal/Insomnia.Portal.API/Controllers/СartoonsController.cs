@@ -34,5 +34,13 @@ namespace Insomnia.Portal.API.Controllers
 
             return Result(schedule);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetId(int id)
+        {
+            var schedule = await _сartoons.Get(id);
+
+            return Result(schedule);
+        }
     }
 }

@@ -33,6 +33,18 @@ namespace Insomnia.Portal.BI.Services
             return Ok(animations);
         }
 
+        public async Task<CartoonReturn> Get(int id)
+        {
+            var location = await _context.Locations.FirstOrDefaultAsync(x => x.Id == id);
+
+            var animation = await Animations.FirstOrDefaultAsync(x => x.Screen == location.Name);
+
+            if (animation == null)
+                return NotFound("Список анимаций пуст!");
+
+            return Ok(animation, location.Id);
+        }
+
         public async Task<BaseReturn> Add(Stream stream)
         {
             var animations = await _import.GetAnimations(stream);
@@ -66,7 +78,22 @@ namespace Insomnia.Portal.BI.Services
         private CartoonsReturn Ok(List<Data.Entity.AnimationTimetable> model) => Ok(model.ToDto<List<Data.Dto.AnimationTimetable>>(_mapper).ToReturn<CartoonsReturn>());
 
         private CartoonsReturn NotFoundArray(string errorMessage) => base.Error<CartoonsReturn>(errorMessage, Data.Enums.CodeRequest.NotFound);
-        
+
+        private CartoonReturn Ok(Data.Entity.AnimationTimetable model, int locationId)
+        {
+            var m = _mapper.Map<Data.Dto.AnimationTimetable>(model);
+
+            m.LocationId = locationId;
+
+            return new CartoonReturn()
+            {
+                Model = m,
+                Success = true
+            };
+        }
+
+        private CartoonReturn NotFound(string errorMessage) => base.Error<CartoonReturn>(errorMessage, Data.Enums.CodeRequest.NotFound);
+
         private BaseReturn Error(string errorMessage) => base.Error<BaseReturn>(errorMessage);
     }
 }

@@ -11,6 +11,7 @@ namespace Insomnia.Portal.Data.Dto
     {
         public Day Day { get; set; }
         public string Screen { get; set; }
+        public int LocationId { get; set; }
         public List<AnimationBlock> Blocks { get; set; }
     }
 }

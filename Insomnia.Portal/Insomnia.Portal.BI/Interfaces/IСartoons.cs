@@ -10,5 +10,7 @@ namespace Insomnia.Portal.BI.Interfaces
     public interface ICartoons
     {
         Task<CartoonsReturn> GetAll();
+
+        Task<CartoonReturn> Get(int id);
     }
 }
