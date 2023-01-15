@@ -31,9 +31,7 @@ namespace Insomnia.Portal.API.Controllers
         public async Task<IActionResult> CashGetAll()
         {
             var version = await _cash.GetAll();
-
-            Response.Headers.Add("Version", $"{version}");
-
+            
             return Ok(version);
         }
 
@@ -42,9 +40,14 @@ namespace Insomnia.Portal.API.Controllers
         {
             var version = await _cash.Get(name);
 
-            Response.Headers.Add("Version",$"{((version is null) ? 0 : version.Version)}");
+            AddVersionInHeaders(version?.Version ?? 0);
 
             return Ok();
+        }
+
+        private void AddVersionInHeaders(double version)
+        {
+            Response.Headers.Add("Version", $"{version}");
         }
     }
 }
