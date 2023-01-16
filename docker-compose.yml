@@ -34,7 +34,7 @@ services:
       - pg
     restart: always
     ports:
-      - '8091:80'
+      - '3500:80'
     links:
       - pg
     networks:
